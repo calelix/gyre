@@ -52,8 +52,7 @@ Quality is defined as:
 - **Component catalog**: Storybook
 
 ### Design ↔ Code Communication Medium
-- Design intent is expressed and recorded in **`.md` form**
-- Currently referencing the format used by [google-labs-code/design.md](https://github.com/google-labs-code/design.md) (reference only, not an adopted commitment)
+- Design intent is expressed and recorded as a **`DESIGN.md`** file, following the format specified by [google-labs-code/design.md](https://github.com/google-labs-code/design.md): YAML front matter for machine-readable design tokens combined with markdown prose for design rationale.
 
 ### Runtime / Distribution Form
 - Runs as a **Claude Code Plugin**
