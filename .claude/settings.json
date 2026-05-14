@@ -3,6 +3,7 @@
     "ANTHROPIC_BASE_URL": "http://127.0.0.1:9801"
   },
   "enabledPlugins": {
-    "superpowers@superpowers-marketplace": true
+    "superpowers@superpowers-marketplace": true,
+    "compound-engineering@compound-engineering-plugin": true
   }
 }
