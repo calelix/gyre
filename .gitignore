@@ -1,6 +1,9 @@
 # Dependencies
 node_modules/
 
+# Build output
+.next/
+
 # Environment variables
 .env
 .env.local
@@ -8,6 +11,3 @@ node_modules/
 
 # OS files
 .DS_Store
-
-# Experimental
-experiments/
