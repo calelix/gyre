@@ -1,6 +1,6 @@
 ---
 created: 2026-05-11
-updated: 2026-05-11
+updated: 2026-05-15
 ---
 
 # Foundation
@@ -13,10 +13,10 @@ In frontend development, communication between product managers, designers, and 
 This project replaces that structure with **"a single director ↔ AI (acting as PM, designer, and developer)"** communication. The quality lift that previously came from human-to-human dialogue must now be delivered by human-to-AI dialogue.
 
 ### End Goal (What "Done" Looks Like)
-When a user requests a UI component or page in natural language, the AI should be able to refine the under-specified request through dialogue and produce one of the following:
+When a user requests a UI component or page in natural language, an **AI Harness** — a bundle of skills, tools, context, and validation procedures distributed as a Claude Code Plugin — should be able to refine the under-specified request through dialogue and produce one of the following:
 
 - **A custom UI component** built on top of Headless UI (e.g., Base UI, Radix UI) that conforms to the design guide, or
-- **A design guide itself**
+- **A design guide itself** (`DESIGN.md`)
 
 Stable execution of this behavior marks "completion." Beyond that point, the goal is to systematically manage and extend the component library while the AI keeps learning and evolving.
 
@@ -37,7 +37,7 @@ The primary audience is **anyone struggling with design–development synchroniz
 Quality is defined as:
 1. The user's intent is **fully reflected**
 2. That intent and the decisions around it are **recorded**
-3. The result is generated as **good code**
+3. The result is generated as **enterprise-grade code**
 
 ## Tech Stack (Initial)
 
@@ -47,7 +47,8 @@ Quality is defined as:
 
 ### Frameworks / Major Libraries
 - **Target framework for generated output**: Next.js
-- **Headless UI foundations**: Base UI, Radix UI, and similar — the basis on which design-guide-conformant custom components are generated
+- **Headless UI foundations**: Base UI, Radix UI, and similar — primitives forming the basis of design-guide-conformant custom components
+- **Component starter set**: shadcn/ui — a copy-paste open-source component collection that picks one of Base UI or Radix UI as its primitive (built on Tailwind)
 - **Styling**: Tailwind CSS
 - **Component catalog**: Storybook
 
@@ -57,10 +58,13 @@ Quality is defined as:
 ### Runtime / Distribution Form
 - Runs as a **Claude Code Plugin**
 
+### AI/LLM
+- **SDK**: No separate SDK — uses Claude Code's built-in invocation path
+- **Model**: Claude family (specific model line deferred)
+
 ### Package Manager
 - **pnpm**
 
 ### TBD
-- **AI/LLM SDK and model selection**: TBD — the distribution form (Claude Code Plugin) is fixed; specifics will follow within that context
 - **Data storage approach** (where the component library, design guide, and conversation history are kept): TBD
 - **Build tooling**: TBD
