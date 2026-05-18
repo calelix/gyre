@@ -1,0 +1,14 @@
+{
+  "name": "gyre",
+  "owner": {
+    "name": "calelix",
+    "email": "jgpark7281@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "gyre",
+      "source": "./",
+      "description": "AI Harness for frontend UI/UX. Refines under-specified component requests into specs."
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "name": "gyre",
+  "description": "AI Harness for frontend UI/UX. Refines under-specified component requests into specs.",
+  "version": "0.1.0",
+  "author": {
+    "name": "calelix",
+    "email": "jgpark7281@gmail.com"
+  }
+}
