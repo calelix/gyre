@@ -1,6 +1,6 @@
 # Gyre
 
-An AI Harness for frontend UI/UX, distributed as a Claude Code Plugin.
+AI driven React and TypeScript code generation from natural language.
 
 ## Why
 
