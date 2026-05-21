@@ -1,6 +1,6 @@
 ---
 created: 2026-05-11
-updated: 2026-05-15
+updated: 2026-05-21
 ---
 
 # Foundation
@@ -41,15 +41,17 @@ Quality is defined as:
 
 ## Tech Stack (Initial)
 
+**Scope:** The output produced by the AI Harness is limited to Next.js (App Router), shadcn/ui, and Tailwind CSS v4 — each used at its latest version. Other frameworks and styling systems are not under consideration at this time.
+
 ### Languages
 - **TypeScript**, **React**
 - **Node.js** where needed
 
 ### Frameworks / Major Libraries
-- **Target framework for generated output**: Next.js
+- **Target framework for generated output**: Next.js (App Router)
 - **Headless UI foundations**: Base UI, Radix UI, and similar — primitives forming the basis of design-guide-conformant custom components
 - **Component starter set**: shadcn/ui — a copy-paste open-source component collection that picks one of Base UI or Radix UI as its primitive (built on Tailwind)
-- **Styling**: Tailwind CSS
+- **Styling**: Tailwind CSS v4
 - **Component catalog**: Storybook
 
 ### Design ↔ Code Communication Medium

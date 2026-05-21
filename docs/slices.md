@@ -22,5 +22,5 @@ updated: 2026-05-17
 
 ## Foundation Update Candidates
 
-- Scope decision: AI Harness is specialized for the Next.js + shadcn/ui + Tailwind CSS v4 stack rather than being general-purpose — flagged on 2026-05-17
-- Tailwind CSS version pinned to v4 — flagged on 2026-05-17
+- Scope decision: AI Harness is specialized for the Next.js + shadcn/ui + Tailwind CSS v4 stack rather than being general-purpose — flagged on 2026-05-17 — resolved in foundation.md on 2026-05-21
+- Tailwind CSS version pinned to v4 — flagged on 2026-05-17 — resolved in foundation.md on 2026-05-21
