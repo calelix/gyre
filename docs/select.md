@@ -1,13 +1,21 @@
 ---
 created: 2026-05-17
-updated: 2026-05-19
+updated: 2026-05-21
 ---
 
 # Select
 
 ## Active
 
-(none — pending next selection)
+### When the user runs a skill against an existing component request specification produced by the clarify-component skill, the AI generates a working custom UI component from that spec, which the user can see on screen.
+
+**Closed demo line**: For a user's natural-language component request specification produced by the clarify-component skill, a skill is created that actually implements the corresponding component.
+
+**Visible Outcomes**:
+- The skill described in the closed demo line exists.
+- A component based on the specification is generated.
+
+**Selected on**: 2026-05-21
 
 ## History
 
