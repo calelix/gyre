@@ -1,13 +1,25 @@
 ---
 created: 2026-05-17
-updated: 2026-05-21
+updated: 2026-05-22
 ---
 
 # Select
 
 ## Active
 
-### When the user runs the setup skill in a host project, the AI installs into that project the external stack skills that the component-generation skill depends on.
+### When the user runs a skill in a host project against an existing component request specification produced by the clarify-component skill, the AI generates a working custom UI component from that spec, which the user can see on screen.
+
+**Closed demo line**: When the user runs a skill in a host project against an existing component request specification produced by the clarify-component skill, the AI generates a working custom UI component from that specification, and the user can see it on screen.
+
+**Visible Outcomes**:
+- When the skill is run against a request specification, a UI component is generated.
+- The skill that generates a component from a specification is created.
+
+**Selected on**: 2026-05-22
+
+## History
+
+### 2026-05-22 — When the user runs the setup skill in a host project, the AI installs into that project the external stack skills that the component-generation skill depends on.
 
 **Closed demo line**: When the user runs the setup skill in a host project, the AI installs into that project the external stack skills that the component-generation skill depends on.
 
@@ -16,7 +28,7 @@ updated: 2026-05-21
 
 **Selected on**: 2026-05-21
 
-## History
+**Status**: completed
 
 ### 2026-05-21 — When the user runs a skill against an existing component request specification produced by the clarify-component skill, the AI generates a working custom UI component from that spec, which the user can see on screen.
 
