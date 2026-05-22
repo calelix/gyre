@@ -26,7 +26,8 @@ The external stack skills are installed into the host project **on demand** by
 ## Core Policy — external stack skills are consumed only as skills
 
 External stack skills are installed **individually, as skills**, into the host
-project's `.agents/skills/` directory via the `skills` CLI (skills.sh). They are
+project's skills directory via the `skills` CLI (skills.sh) — the current CLI
+places the Claude Code agent's skills under `.claude/skills/`. They are
 **never** installed as plugins.
 
 Rationale:
@@ -82,9 +83,12 @@ Out of scope (deferred or excluded by policy):
 After a successful run, for each manifest entry the host project contains:
 
 ```
-.agents/skills/<name>/        # the installed skill directory
+.claude/skills/<name>/        # the installed skill directory (current CLI)
 skills-lock.json              # updated with a <name> entry (hash + source)
 ```
+
+(An older `skills` CLI layout placed the directory at `.agents/skills/<name>/`;
+detection accepts either location — see *Detect*.)
 
 These artifacts are produced and maintained by the `skills` CLI; `setup`
 orchestrates the CLI and verifies the artifacts but does not write them directly.
@@ -111,7 +115,7 @@ generation depends on. Each entry has the following fields:
 
 | field | meaning |
 |---|---|
-| `name` | The skill's installed name. Detection key — matched against `.agents/skills/<name>/` and the `skills-lock.json` entry key. |
+| `name` | The skill's installed name. Detection key — matched against the skill directory (`.claude/skills/<name>/` or `.agents/skills/<name>/`) and the `skills-lock.json` entry key. |
 | `source` | The `skills` CLI source coordinates: a GitHub `owner/repo`. |
 | `skill` | Optional. The `--skill <name>` selector, used only when one source repo publishes multiple skills. |
 | `purpose` | One line stating why the Harness's component generation needs this skill. |
@@ -161,7 +165,10 @@ read it as well, it can be promoted to a shared location.
 
 A manifest entry is **already installed** when both hold in the host project:
 
-- `.agents/skills/<name>/SKILL.md` exists, and
+- a `SKILL.md` exists in EITHER `.claude/skills/<name>/` OR
+  `.agents/skills/<name>/` — both are checked because the install location
+  varies with the `skills` CLI version (the current CLI uses `.claude/skills/`),
+  and
 - `skills-lock.json` contains an entry keyed by `<name>`.
 
 If exactly one of the two holds, the entry is **incompletely installed** and is
@@ -178,10 +185,10 @@ Run, from the host project root:
 
 where `<runner>` is the runner from step 3, and `<source>` / `<skill>` come from
 the manifest entry. The `--agent claude-code` selector targets the agent the
-Harness runs under, so the installed skill is wired for Claude Code. The exact flag
-and its behavior are confirmed against the live `skills` CLI at implementation
-time. The CLI owns `.agents/skills/` placement, the `skills-lock.json` update, and
-hash computation.
+Harness runs under, so the installed skill is wired for Claude Code; the
+implementation also passes `--yes` to skip the CLI's interactive prompts. The
+CLI owns skill-file placement (the current CLI copies the skill into
+`.claude/skills/<name>/`), the `skills-lock.json` update, and hash computation.
 
 ### Verify
 
@@ -205,7 +212,8 @@ hold, the entry is verified installed. If not, the entry is reported as failed.
   reference files are written in English; at runtime the AI conducts dialogue and
   delivers the final report in the user's language.
 - The skill does not modify host project files other than through the `skills`
-  CLI. The CLI's artifacts (`.agents/skills/`, `skills-lock.json`) are the only
+  CLI. The CLI's artifacts (the skill directory under `.claude/skills/` — or
+  `.agents/skills/` for an older CLI — and `skills-lock.json`) are the only
   expected changes.
 
 ## Verification of this slice
@@ -215,11 +223,13 @@ the playground [`experiments/shadcn`](../../../experiments/shadcn).
 
 - **Idempotency path.** When the playground already has the shadcn skill installed,
   `/setup` must detect it as *already present* and report so without reinstalling.
-- **Install path.** Remove `.agents/skills/shadcn/` and the shadcn entry from
-  `skills-lock.json` to create a clean host, then run `/setup`. The shadcn skill
-  must be installed and both artifacts produced.
+- **Install path.** Remove the playground's installed shadcn skill directory
+  (the committed fixture sits at `.agents/skills/shadcn/`) and the shadcn entry
+  from `skills-lock.json` to create a clean host, then run `/setup`. The shadcn
+  skill must be installed and both artifacts produced.
 - **Visible Outcome.** The slice's Visible Outcome is satisfied when, after
-  `/setup` on a clean host, `.agents/skills/shadcn/` and a `skills-lock.json`
+  `/setup` on a clean host, the installed shadcn skill directory
+  (`.claude/skills/shadcn/` with the current CLI) and a `skills-lock.json`
   shadcn entry both exist.
 
 ## Open design points (deferred to implementation)
@@ -227,7 +237,12 @@ the playground [`experiments/shadcn`](../../../experiments/shadcn).
 - The exact `description` and `allowed-tools` strings in the `SKILL.md` front
   matter.
 - The precise `skills` CLI flag set — in particular whether `--agent claude-code`
-  is the correct selector — confirmed against the live CLI during implementation.
+  is the correct selector. **Resolved during implementation:** `--agent
+  claude-code` is correct; the current CLI installs the skill as a *copy* under
+  `.claude/skills/<name>/` and does not create `.agents/skills/`. Detection was
+  changed to accept the skill in either `.claude/skills/<name>/` or
+  `.agents/skills/<name>/`. See
+  [`docs/issues/2026-05-22-setup-detection-install-path-assumption.md`](../../issues/2026-05-22-setup-detection-install-path-assumption.md).
 - The exact rendering of the user-facing report.
 
 ## Source materials
