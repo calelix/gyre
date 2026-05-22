@@ -1,6 +1,6 @@
 ---
 created: 2026-05-11
-updated: 2026-05-21
+updated: 2026-05-22
 ---
 
 # Foundation
@@ -59,6 +59,9 @@ Quality is defined as:
 
 ### Runtime / Distribution Form
 - Runs as a **Claude Code Plugin**
+
+### Harness Composition
+The AI Harness bundles or vendors no third-party stack skills — it ships only its own skills. Among these is a `setup` skill that, on demand, installs the external stack skills the component-generation skill depends on into the host project. Those external stack skills are installed as individual skills via the `skills` CLI, never as plugins (the Harness itself remains a Claude Code Plugin, per Runtime / Distribution Form above).
 
 ### AI/LLM
 - **SDK**: No separate SDK — uses Claude Code's built-in invocation path
