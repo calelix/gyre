@@ -8,7 +8,7 @@ updated: 2026-05-22
 ## Confirmed Slices
 
 1. When the user invokes a new skill `/[skill-name]`, the AI asks N questions and produces one component request specification markdown. — priority: high
-2. When the user runs a skill against an existing component request specification produced by the clarify-component skill, the AI generates a working custom UI component from that spec, which the user can see on screen. — priority: high
+2. When the user runs a skill in a host project against an existing component request specification produced by the clarify-component skill, the AI generates a working custom UI component from that spec, which the user can see on screen. — priority: high
 3. When the user runs the setup skill in a host project, the AI installs into that project the external stack skills that the component-generation skill depends on. — priority: high
 
 ## Tentative Slices
@@ -16,6 +16,10 @@ updated: 2026-05-22
 (none)
 
 ## Change Log
+
+### 2026-05-22
+
+- Clarified: "When the user runs a skill against an existing component request specification produced by the clarify-component skill, the AI generates a working custom UI component from that spec, which the user can see on screen." — inserted "in a host project" so slice 2 explicitly states it runs in the host project, matching the setup slice's framing and the Harness Composition section added to foundation.md on 2026-05-22.
 
 ### 2026-05-21
 
