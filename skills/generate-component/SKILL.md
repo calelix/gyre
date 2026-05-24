@@ -70,14 +70,34 @@ Out of scope (deferred or excluded):
 - Generating demo routes, tests, or component documentation beyond the story
   file.
 - Page and `DESIGN.md` generation — separate slices in future iterations.
+- Running when required stack skills are not installed in the host. The skill terminates at Step 1.5 with a pointer to `/setup` instead of falling back to host conventions alone.
 
 ## Process
 
-The skill executes the following nine steps in order. Each step has an explicit termination branch on failure.
+The skill executes the following steps in order. Each step has an explicit termination branch on failure.
 
 ### 1. Confirm host project
 
 Check that the current working directory contains a `package.json` file. If it does not, tell the user that `generate-component` must be run from a project root, and terminate without reading the spec or writing anything.
+
+### 1.5. Precondition — stack skills installed
+
+Read the manifest at [`../setup/references/stack-skills.md`](../setup/references/stack-skills.md). For each entry, evaluate the two detection signals **as defined in [`../setup/SKILL.md`](../setup/SKILL.md) Step 4 (Detect install state)**:
+
+- a skill directory carrying `SKILL.md` exists at EITHER `.claude/skills/<name>/SKILL.md` OR `.agents/skills/<name>/SKILL.md`, and
+- `skills-lock.json` at the host project root contains the key `<name>` under its `skills` object.
+
+Classify each entry as `installed` (both signals hold), `incomplete` (exactly one holds), or `missing` (neither holds) — the same classification used by `setup` Step 4.
+
+If every entry is `installed`, proceed to Step 2.
+
+Otherwise, terminate. In the user's language:
+
+- name each non-`installed` entry and state which detection signal is missing (skill files / lock entry / both),
+- instruct the user to run `/setup` from this host project root and then retry `/generate-component`,
+- do not load the spec, do not perform host discovery, do not write any file.
+
+A failed precondition is never reported as success — the same posture `setup` takes in its own Step 6 ("Verify and report").
 
 ### 2. Load spec
 
