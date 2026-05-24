@@ -1,6 +1,6 @@
 ---
 created: 2026-05-17
-updated: 2026-05-22
+updated: 2026-05-25
 ---
 
 # Slices
@@ -16,6 +16,10 @@ updated: 2026-05-22
 (none)
 
 ## Change Log
+
+### 2026-05-25
+
+- Hardened (slice 2 implementation): generate-component gained a Step 1.5 precondition that gates on slice 3's setup manifest; the stack-skills manifest expanded from 1 to 8 entries. Slice texts and Confirmed Slices list unchanged. See [`docs/superpowers/specs/2026-05-24-stack-skills-precondition-and-manifest-expansion-design.md`](superpowers/specs/2026-05-24-stack-skills-precondition-and-manifest-expansion-design.md).
 
 ### 2026-05-22
 
