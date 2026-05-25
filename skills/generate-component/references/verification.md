@@ -12,6 +12,8 @@ This file is read by `generate-component` Step 9 to verify the emitted files and
 - The package-runner forms used to invoke a binary without a host-installed script — resolved per [`../setup/SKILL.md`](../setup/SKILL.md) Step 3, which already encodes the ecosystem convention.
 - The conventional script names hosts use for typecheck and story-build, and the shape of host package metadata where those scripts are declared.
 
+The call site that brings each delegated stack skill's body into context is `generate-component` Step 2.5 ("Invoke stack skills"), which consults the manifest's `kind` and `condition` columns to decide whether to invoke each entry via the Skill tool.
+
 The exact invocation form on a given host follows stack convention; this file only specifies the lookup policy.
 
 ---

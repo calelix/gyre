@@ -103,6 +103,21 @@ A failed precondition is never reported as success — the same posture `setup` 
 
 Read `docs/gyre/specs/components/<kebab-name>.md`. Parse both the YAML front matter and the body sections (Where / What / Look / How / Data / Non-goals). If the file is absent, tell the user that no spec was found at that path and that they should run `clarify-component <kebab-name>` to create one, then terminate.
 
+### 2.5. Invoke stack skills
+
+Read the manifest at [`../setup/references/stack-skills.md`](../setup/references/stack-skills.md). For each row, in the table's row order:
+
+- `kind: always` — invoke the row's `name` via Claude Code's Skill tool.
+- `kind: conditional` — evaluate the row's `condition` predicate against the spec body loaded in Step 2. If the predicate is true, invoke the row's `name` via the Skill tool. If false, skip the row.
+- `kind: external` — skip. The skill loads through its own auto-activation mechanism; the manifest row exists so that `setup` installs it.
+- `kind: deferred` — skip. The manifest row exists so that `setup` installs it for parity with future iterations.
+
+Run the invocations sequentially in row order so the resulting tool-call trace is deterministic for a given spec.
+
+If a Skill invocation errors (skill not found, body load failure), report the failure to the user — naming the row and the error — and terminate without proceeding to Step 3. Step 1.5 should have caught uninstalled entries already, so reaching this branch indicates drift between the install state and the manifest.
+
+Loaded skill bodies remain available to all subsequent steps (Discovery in Step 4, Plan composition in Step 5, file Write in Step 8, Verify in Step 9) without re-invocation.
+
 ### 3. Classify Where decision
 
 Read the spec's `## Where → Decision` value.
