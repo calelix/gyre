@@ -32,7 +32,7 @@ Each row in the table resolves one slot. The table has three columns:
 - `user-needed` — discovery could not resolve the slot; the user must supply or approve a value before Plan approval can proceed.
 - `shadcn-install` — a Reference primitive is not in the host; the `shadcn` skill will be invoked to install it after Plan approval.
 - `npm-install` — an external dependency the spec requires is not in `package.json`; the host's package manager will install it after Plan approval.
-- `attention` — a non-blocking discrepancy the user should know about (most commonly a spec/`DESIGN.md` token conflict).
+- `attention` — a non-blocking discrepancy the user should know about. Two cases that produce `attention` rows: (a) a spec/`DESIGN.md` token conflict (the historical primary case); (b) a spec `## Implementation hints` bullet conflicts with a loaded stack skill's prescription for the same underlying requirement — the row shape is `Hint divergence: <hint text>` | `Stack skill recommends <stack pattern>; hint not followed.` | `attention`. See [`output-format.md`](./output-format.md) → *Implementation hints handling* for the resolution rule.
 - `host-setup-required` — a runtime precondition for an imported symbol is not met in the host (e.g., a context provider missing in the layout tree, an HTML attribute missing, a required config flag absent). Non-blocking — the user can approve the Plan with the precondition unmet (intending to fix the host afterwards). Distinct from `attention`: `attention` covers cosmetic discrepancies that do not affect runtime; `host-setup-required` covers runtime preconditions whose absence changes whether the component behaves as the spec assumes.
 
 ---

@@ -1,7 +1,7 @@
 # Dimensions
 
-The six axes of clarification that the dialogue covers. When a dimension is active, dimensions are visited in this order:
-**Where → What → Look → How → Data → Non-goals**.
+The seven axes of clarification that the dialogue covers. When a dimension is active, dimensions are visited in this order:
+**Where → Interaction model → What → Look → How → Data → Non-goals**.
 
 The ordering is deliberate. *Where* comes first because a positive answer ("an existing component already covers this") makes the rest unnecessary, terminating dialogue early.
 
@@ -12,6 +12,7 @@ All questions in this file are written in English as the source language. At run
 | Dimension | Always active | Full condition | Compressed condition |
 |---|---|---|---|
 | Where | Yes | — | — |
+| Interaction model | No | Requested pattern matches a class of UI with multiple legitimate interaction variants | Compose decision's Reference primitive fixes the variant |
 | What | Yes | — | — |
 | Look | No | Design guide absent or sparse | Design guide defined and substantive |
 | How | Yes | — | — |
@@ -23,6 +24,8 @@ Compressed does not mean skipped. A compressed dimension still appears in the ou
 **Note on activation mechanism.** *Look*'s activation is decided by asking the user a meta question at the start of the dimension (see §Look). *Data / Content*'s activation is decided silently from the internal risk signals (see `risk-signals.md`) — no user question is involved in the activation decision itself. This is the only structural difference between the two conditional dimensions and must not be conflated.
 
 **Note on composition-aware framing.** When the *Where* decision is `Extend` or `Compose`, the downstream dimensions (especially *Look*, *How*, and *Data / Content*) should distinguish what the referenced primitive already provides from what this component *adds*. Capture the added aspects, and explicitly note inherited aspects as inherited (e.g., "states inherit from Button"). Do not redescribe the primitive's responsibilities as if writing them from scratch — that creates spec/implementation drift.
+
+**Note on requirements-only voice for `## How`.** The three sub-sections of *How* that describe observable behavior (`## How → Interactions`, `## How → Edge cases`, `## How → Accessibility`) follow a requirements-only voice. The dialogue rejects bullets that name library/API symbols the AI authored (e.g., `useEffect`, `next-themes`), express procedural steps ("...then ..."), or cite named implementation idioms ("mount-guard pattern"). When a bullet trips the rule, the AI returns to dialogue with a single rephrase question and routes the user's answer to one of two outcomes: rewrite as the underlying requirement, or move the prose to the optional `## Implementation hints` section in the spec (see `output-format.md`) with the user's stated rationale. Enforcement happens at the *Self-check* step (Step 10 in `SKILL.md`).
 
 ---
 
@@ -68,6 +71,41 @@ The order matters: Q1a → Q1b → (Q2 if applicable). A "yes" on Q1a does not s
 - *New* — Q1a yielded no name AND Q1b yielded no name. No reference is recorded. Proceed to the next dimension.
 
 If both Q1a (with "extended") and Q1b yield names, the Decision is **Extend** (Q1a dominates the identity axis); the composed primitive(s) are mentioned in `Rationale`. The `Reference` field carries the same-role identifier.
+
+---
+
+## Interaction model (conditional)
+
+**Captures:** the specific interaction variant for components whose request name maps to a class of UI with more than one legitimate shape (e.g., `mode-toggle` → binary toggle vs cycle button vs 3-way dropdown; `combobox` → autocomplete-only vs selectable-list vs multi-select).
+
+**Importance:** silently inferring one variant pins downstream decisions (props in *What*, states in *How*) to that variant. When the user is not asked, the AI's inference becomes a spec default the user never approved — the failure mode recorded in [`docs/issues/2026-05-25-clarify-component-interaction-model-variants.md`](../../../docs/issues/2026-05-25-clarify-component-interaction-model-variants.md).
+
+**Activation:**
+
+The dimension activates when the requested component matches a class of UI for which more than one legitimate interaction model exists in common practice. The AI uses its own knowledge for this judgment — no stack skill is invoked (clarify remains self-contained).
+
+Examples that activate: `mode-toggle`, `combobox`, `command-palette`, `data-table`, `navigation-menu`, `date-picker`, `multi-select`, `autocomplete`.
+
+Examples that do not activate: `primary-submit-button`, `card`, `avatar`, `badge`, `breadcrumb`.
+
+If activation is uncertain, **default to activate**. The cost of an unnecessary question is one dialogue turn the user can dismiss; the cost of a silent miss is the original failure mode.
+
+### Compressed path
+
+When the *Where* decision is `Compose` and the Reference primitive itself fixes the variant (e.g., the user named `DropdownMenu` as the primitive — that already chooses the dropdown variant), the dimension compresses: no question is asked, and the spec records `(compressed: variant fixed by Reference primitive <name>)` followed by the implied variant name on a single line.
+
+### Full path
+
+Single question:
+
+> "<pattern name> commonly has multiple interaction models. Which one should this component implement?
+> - **<Variant 1 name>** — <one-line description> (e.g., used by <one real-world example, if known>)
+> - **<Variant 2 name>** — <one-line description>
+> - **<Variant 3 name>** — <one-line description>
+>
+> If none of the above matches what you want, describe the variant you have in mind."
+
+The user's explicit choice is recorded in the spec's `## Interaction model` section per `output-format.md`. The chosen variant calibrates subsequent dimensions (*What* props surface, *How* states and interactions).
 
 ---
 

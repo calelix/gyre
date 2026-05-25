@@ -24,6 +24,7 @@ This is the only mapping rule this skill owns. Each section of the spec becomes 
 | `## How → Edge cases` | Conditional rendering, reduced-motion accommodations, RTL handling, and similar. |
 | `## Look → Token overrides` | Token-bearing prop values (e.g., the class-name slot the host stack uses). If the override conflicts with `DESIGN.md`, the conflict appears as `attention` on the Plan, not silently in code. |
 | `## Where → Reference` | Import statement(s) for the referenced primitive(s); the component body composes on top of them. |
+| `## Interaction model` (when present) | The component's overall structural shape (primitive composition, event topology, exposed handlers). The chosen variant constrains which primitives the body composes and which handlers are exposed via props. When the section is absent from the spec, the AI infers the structural shape from `## What` and `## How` as it does today. |
 
 | Spec section | Becomes in `<kebab-name>.stories.tsx` |
 |---|---|
@@ -41,6 +42,24 @@ External symbols are imported from the paths the Plan's items table records (the
 External symbol *names* (not just paths) are also resolved by host discovery. The Plan's `Import: <role> from <pkg>` rows record the specific exported names selected from each package's installed type definitions, taking deprecation status into account. The selection algorithm (candidate generation, type-definition check, deprecation check, submodule selection) lives in [`host-discovery.md`](./host-discovery.md) under *External dependencies — symbol resolution*. Emit uses exactly the names the Plan recorded.
 
 The import map is the single source of truth for paths. Do not hand-edit imports to "fix" them during Step 9's self-repair loop without recomposing the Plan.
+
+---
+
+## Implementation hints handling
+
+When the spec carries an optional `## Implementation hints` section (see [`../../clarify-component/references/output-format.md`](../../clarify-component/references/output-format.md)), each bullet is a user-stated implementation pattern with a stated rationale. The hint is **a strong recommendation, not a contract**:
+
+- The hint is followed by default during code emission.
+- When a loaded stack skill (e.g., `vercel-react-best-practices`, `next-best-practices`) prescribes a different pattern for the same underlying requirement, the stack skill's prescription wins. The emitted code follows the stack prescription, not the hint.
+- Each divergence produces a Plan row with the `attention` label, of the form:
+
+  | slot | value | source |
+  |---|---|---|
+  | `Hint divergence: <hint text>` | `Stack skill recommends <stack pattern>; hint not followed.` | `attention` |
+
+- The user can amend the divergence row at Plan approval. Amending it to "follow the hint anyway" is a spec-level change (per the existing spec-contradiction termination rule in `plan-format.md`) and the skill directs the user back to `clarify-component` to update the spec.
+
+This contrasts with `## Host preconditions` (see `host-discovery.md` → *Consumer-implied preconditions — derivation and verification*), which is a contract: its bullets produce `host-setup-required` rows on mismatch. Implementation hints are non-contract; their divergence is informational and resolved by user judgment.
 
 ---
 

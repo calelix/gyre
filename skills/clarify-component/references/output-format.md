@@ -44,6 +44,12 @@ Use this body when the *Where* decision is `New`, `Extend`, or `Compose`. Render
 - (Extend or Compose only) Reference: <one or more component identifiers the user named>
 - Rationale: <one line>
 
+## Interaction model
+(rendered only when the dimension activated; omitted otherwise)
+
+- Variant: <chosen variant name>
+- Rationale: <one line: the user's reason in their own words, or `user accepted default proposal`>
+
 ## What
 - Purpose: <one sentence>
 - Usage scenarios:
@@ -68,9 +74,9 @@ Use this body when the *Where* decision is `New`, `Extend`, or `Compose`. Render
 
 ## How
 - States: <comma-separated list, e.g. default, hover, focus, disabled, loading>
-- Interactions: <text covering hover, focus, keyboard, transitions>
-- Accessibility: <text covering semantic markup, ARIA, focus order, contrast>
-- Edge cases: <text covering long text, RTL, i18n, and any other named edge cases>
+- Interactions: <requirements-only — describe what the user can do and what observable outcomes occur; reject implementation prose>
+- Accessibility: <requirements-only — semantic markup, ARIA, focus order, contrast as observable properties>
+- Edge cases: <requirements-only — long text, RTL, i18n, and any other named edge cases as constraints the component must satisfy>
 
 ## Data / Content
 - Schema: <text or table>
@@ -79,11 +85,24 @@ Use this body when the *Where* decision is `New`, `Extend`, or `Compose`. Render
 ## Non-goals
 - <at least one bullet>
 
+## Implementation hints
+(optional; omit when none)
+
+- <one-line user-stated implementation pattern>: <rationale — why this specific pattern, not just the requirement>
+
 ## Host preconditions
 (optional; omit when none)
 
 - <one-line requirement>: <one-line signal description>
 ````
+
+### `## Implementation hints` (optional)
+
+The `## Implementation hints` section is optional and omitted from the spec when none apply. It captures implementation patterns the *user explicitly stated* they want (for parity with an existing component, project policy, or personal preference) — not patterns the AI inferred. Each bullet pairs a one-line pattern with a one-line rationale; the rationale is mandatory, because a hint without a stated reason is indistinguishable from a silent default (which the principle forbids).
+
+`clarify-component` does **not** ask for this section on its own initiative. It is filled only as the routed outcome of the `## How` voice-rule reject flow (see `dimensions.md` *Note on requirements-only voice for `## How`*): when the user answers "the pattern itself is the requirement, here's why" to a rephrase question, clarify records the bullet here.
+
+The hint is consumed by `generate-component` (see [`output-format.md`](../../generate-component/references/output-format.md) → *Implementation hints handling*) as a **strong recommendation, not a contract**. The hint is followed by default; when a loaded stack skill prescribes a different pattern for the same underlying requirement, the stack skill's prescription wins and an `attention` row appears on the Plan noting the divergence.
 
 ### `## Host preconditions` (optional)
 
@@ -110,6 +129,31 @@ The compressed line **must** be followed by the single substantive line that the
 
 - Schema: a string `label` and an optional `icon`.
 ```
+
+When the *Interaction model* dimension is compressed because the *Where* decision is `Compose` and the Reference primitive itself fixes the variant, render the section as:
+
+```markdown
+## Interaction model
+(compressed: variant fixed by Reference primitive DropdownMenu)
+
+- Variant: 3-way dropdown
+```
+
+The compressed line is followed by the single substantive line stating the implied variant, so a spec reader does not need to re-derive it from the Reference name.
+
+### `## How` voice rule
+
+The three sub-sections of `## How` that describe observable behavior — `Interactions`, `Edge cases`, `Accessibility` — follow a requirements-only voice. A bullet is rejected when it contains:
+
+1. **Library or API names** in the body prose (`useEffect`, `useState`, `next-themes`, etc.) that the AI authored. Library names quoted verbatim from the user's request are not rejected.
+2. **Procedural steps** ("...then ...", "first ... after which ...").
+3. **Citations of specific implementation idioms** ("mount-guard pattern", "render prop" used as a how-to instruction).
+
+The rule does not reject domain-level outcome statements like "the dropdown opens on click" or "focus moves to the first item" — these describe the observable result, not the means of achieving it. Likewise, ARIA attributes like `aria-expanded="true"` are observable outcomes the component must produce, not implementation choices.
+
+When a bullet trips the rule, the AI returns to dialogue with a single rephrase question, and the user's answer routes to one of two outcomes: rewrite the bullet as the underlying requirement, or — when the user confirms the specific pattern itself is the requirement — record the prose under the optional `## Implementation hints` section above, with the user's stated rationale.
+
+Enforcement happens at the *Self-check* step (Step 10 in `SKILL.md`); the rule's authoring-time and self-check-time application are also described in `dimensions.md` *Note on requirements-only voice for `## How`*.
 
 ### Open Questions
 

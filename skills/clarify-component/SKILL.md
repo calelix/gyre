@@ -31,7 +31,7 @@ The skill body and reference files are written in English. At runtime the AI **m
 
 ## Process
 
-The skill executes ten steps in order. Steps 4–8 are the **dimensions** documented in `references/dimensions.md`.
+The skill executes eleven steps in order. Steps 3–9 are the **seven dimensions** documented in `references/dimensions.md`.
 
 ### 1. Classify
 
@@ -54,39 +54,44 @@ Run the *Where* dimension as documented in `references/dimensions.md`.
 - If the answer is **Reuse** → write the reuse-path body (per `references/output-format.md`) and terminate.
 - If the answer is **Extend**, **Compose**, or **New** → re-evaluate risk axes with the Where answer absorbed, then proceed.
 
-### 4. What (always active)
+### 4. Interaction model (conditional)
+
+Activated when the requested component class admits more than one legitimate interaction model in common practice. See `references/dimensions.md`. When not activated, the dimension produces no spec section.
+
+### 5. What (always active)
 
 Run the *What* dimension. The Naming question establishes `<kebab-name>` used as the output filename.
 
-### 5. Look (conditional)
+### 6. Look (conditional)
 
 Open with the activation gate (the meta question about design-guide presence). Based on the answer, run *Look* in compressed or full form. See `references/dimensions.md`.
 
-### 6. How (always active)
+### 7. How (always active)
 
-Run the *How* dimension. Depth is calibrated by the current risk read.
+Run the *How* dimension. Depth is calibrated by the current risk read. The three sub-sections capturing observable behavior (`## How → Interactions`, `## How → Edge cases`, `## How → Accessibility`) follow a requirements-only voice; see `references/dimensions.md` and Step 10 Self-check for enforcement.
 
-### 7. Data / Content (conditional)
+### 8. Data / Content (conditional)
 
 Activated by the current risk read, per `references/risk-signals.md`. Run in full or compressed form.
 
-### 8. Non-goals (always active)
+### 9. Non-goals (always active)
 
 Run the *Non-goals* dimension. At least one non-goal must be recorded.
 
-### 9. Self-check
+### 10. Self-check
 
 Evaluate, with no question asked to the user:
 
 1. Could a code-generation step produce a coherent implementation from this spec, in one pass?
 2. Are there any captured items that could reasonably be interpreted in two different ways?
 3. Are there any areas the risk signals flagged that have not been explored in sufficient depth?
+4. Does every bullet in `## How → Interactions`, `## How → Edge cases`, and `## How → Accessibility` read as a requirement rather than an implementation pattern? Reject prose that contains library/API names the AI authored (e.g., `useEffect`, `next-themes`), procedural steps ("...then ..."), or named implementation idioms ("mount-guard pattern"). When a bullet trips the rule, return to dialogue with a single rephrase question. If the user confirms the pattern itself is the requirement, route the bullet to `## Implementation hints` with the user's stated rationale; otherwise rewrite the bullet as the underlying requirement.
 
 The ambiguity threshold tightens with risk: a high-risk component requires a lower ambiguity tolerance than a low-risk one to pass self-check.
 
-If any of the three checks finds remaining ambiguity, return to dialogue with additional questions targeted at the ambiguity, then re-run self-check. **Repeat until no ambiguity remains. There is no iteration cap.**
+If any of the four checks finds remaining ambiguity or voice-rule violations, return to dialogue with additional questions targeted at the issue, then re-run self-check. **Repeat until no ambiguity or voice-rule violation remains. There is no iteration cap.**
 
-### 10. Write spec
+### 11. Write spec
 
 Write the Markdown file at `docs/gyre/specs/components/<kebab-name>.md` per `references/output-format.md`. If a file already exists at the target path, do not overwrite silently — tell the user and ask whether to overwrite or pick a different name.
 
@@ -126,7 +131,7 @@ The only informal vocabulary they may use is vocabulary belonging to the AI Harn
 
 ## Reference files
 
-- `references/dimensions.md` — Definitions, activation conditions, and question templates for the six dimensions.
+- `references/dimensions.md` — Definitions, activation conditions, and question templates for the seven dimensions.
 - `references/risk-signals.md` — Three risk axes, the heuristic guide for assigning low/medium/high, and the context-announcement phrasing rules.
 - `references/output-format.md` — Front matter schema and Markdown body structures for the full and reuse paths.
 
