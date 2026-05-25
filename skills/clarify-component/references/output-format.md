@@ -78,7 +78,18 @@ Use this body when the *Where* decision is `New`, `Extend`, or `Compose`. Render
 
 ## Non-goals
 - <at least one bullet>
+
+## Host preconditions
+(optional; omit when none)
+
+- <one-line requirement>: <one-line signal description>
 ````
+
+### `## Host preconditions` (optional)
+
+The `## Host preconditions` section is optional and omitted from the spec when none apply. It captures preconditions a spec author knows about that may not be derivable from the spec's import surface alone — for example, project policies ("host must have initialized Sentry before this loads") or non-obvious package contracts. The section is consumed by `generate-component` (see [`host-discovery.md`](../../generate-component/references/host-discovery.md) → *Consumer-implied preconditions — derivation and verification*), where each bullet's `requirement: signal` pair is fed through signal verification and merged with AI-derived preconditions (deduplicated by requirement text).
+
+`clarify-component` does **not** ask for this section in this iteration. It is filled by the spec author at write-time or by the user editing the spec later. A future iteration of clarify may add a dimension or step that proposes preconditions to the user; that is out of scope here.
 
 ### Compressed-dimension rendering
 

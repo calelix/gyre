@@ -127,19 +127,20 @@ Read the spec's `## Where → Decision` value.
 
 ### 4. Discover host context
 
-Map host context into Plan slots per the slot policy in `references/host-discovery.md`. The five slot kinds are:
+Map host context into Plan slots per the slot policy in `references/host-discovery.md`. The six slot kinds are:
 
 - **Component output directory** — resolves the spec's output path; failure label `user-needed`.
 - **Reference primitive location** (Compose only) — resolves each identifier in the spec's `## Where → Reference`; failure label `shadcn-install`.
 - **Active design tokens** — surfaces conflicts with the spec's `## Look → Token overrides`; conflict label `attention` (non-blocking).
-- **External dependencies** — checks for the packages the spec requires (icon library, theme provider, animation library); failure label `npm-install`.
+- **External dependencies** — checks for the packages the spec requires (icon library, theme provider, animation library) and resolves the current export name to emit for each abstract symbol the spec names (by reading the package's installed type definitions); failure label `npm-install`.
+- **Consumer-implied preconditions** — derives, per external symbol the component will import, the host-side conditions that must hold for the symbol to function, verifies each via a host signal; unmet preconditions are surfaced with label `host-setup-required` (non-blocking).
 - **Storybook precondition** — checks the host's story framework is installed. Absence is **not** a Plan item: the skill terminates here and tells the user it must be installed first.
 
 The concrete stack conventions used to perform each lookup (configuration file structure, path resolution, primitive file naming, installation-detection signals) are not duplicated here — they belong to the stack skills installed by `setup` (see [`../setup/references/stack-skills.md`](../setup/references/stack-skills.md) for the current manifest).
 
 ### 5. Compose Plan
 
-Assemble a single Plan document combining the spec and the discoveries from step 4. The Plan's structure is defined in `references/plan-format.md`. It includes the two output file paths, the import map, all prerequisite actions, story rows derived from the spec's `## How → States`, and any `user-needed` or `attention` items. The seven source labels that may appear on Plan rows are: `spec`, `host`, `inferred`, `user-needed`, `shadcn-install`, `npm-install`, and `attention`.
+Assemble a single Plan document combining the spec and the discoveries from step 4. The Plan's structure is defined in `references/plan-format.md`. It includes the two output file paths, the import map, all prerequisite actions, story rows derived from the spec's `## How → States`, and any `user-needed`, `attention`, or `host-setup-required` items. The eight source labels that may appear on Plan rows are: `spec`, `host`, `inferred`, `user-needed`, `shadcn-install`, `npm-install`, `attention`, and `host-setup-required`.
 
 ### 6. Plan approval
 
@@ -195,8 +196,8 @@ The skill never runs `storybook dev`; it builds only.
 
 These files show spec → code mapping (and the host-discovery / Plan-composition / verification policies that surround it). They contain no stack convention details — React, Next.js, shadcn/ui, the type system, the story framework — those are delegated to the stack skills installed in the host by `setup` (see [`../setup/references/stack-skills.md`](../setup/references/stack-skills.md) for the current manifest).
 
-- `references/host-discovery.md` — slot policy (which kinds of host context the Plan needs, which Plan slot label is used on resolve failure) and the four resolve-failure labels.
-- `references/plan-format.md` — the Plan's three-section structure, the seven source labels, story-set rendering, the approval mechanism, and the spec-contradiction termination phrasing rules.
+- `references/host-discovery.md` — slot policy (which kinds of host context the Plan needs, which Plan slot label is used on resolve failure) and the five resolve-failure labels.
+- `references/plan-format.md` — the Plan's three-section structure, the eight source labels, story-set rendering, the approval mechanism, and the spec-contradiction termination phrasing rules.
 - `references/output-format.md` — the spec → code mapping (which spec section becomes which piece of the emitted code), the imports rule, the no-comments-by-default rule with its single exception, and the collision prompt.
 - `references/verification.md` — command resolution policy (which host scripts to look up and the binary fallback), the self-repair loop rules, error-normalization definitions, and the context provided to each repair invocation.
 

@@ -22,7 +22,7 @@ Each row in the table resolves one slot. The table has three columns:
 |---|---|
 | `slot` | What the row decides (e.g., "Output directory", "Reference: Button", "Package: next-themes"). |
 | `value` | The resolved value, or a `?` placeholder when the source is `user-needed`. |
-| `source` | One of seven labels defined below. |
+| `source` | One of eight labels defined below. |
 
 ### Source labels
 
@@ -33,6 +33,7 @@ Each row in the table resolves one slot. The table has three columns:
 - `shadcn-install` — a Reference primitive is not in the host; the `shadcn` skill will be invoked to install it after Plan approval.
 - `npm-install` — an external dependency the spec requires is not in `package.json`; the host's package manager will install it after Plan approval.
 - `attention` — a non-blocking discrepancy the user should know about (most commonly a spec/`DESIGN.md` token conflict).
+- `host-setup-required` — a runtime precondition for an imported symbol is not met in the host (e.g., a context provider missing in the layout tree, an HTML attribute missing, a required config flag absent). Non-blocking — the user can approve the Plan with the precondition unmet (intending to fix the host afterwards). Distinct from `attention`: `attention` covers cosmetic discrepancies that do not affect runtime; `host-setup-required` covers runtime preconditions whose absence changes whether the component behaves as the spec assumes.
 
 ---
 
@@ -68,6 +69,10 @@ Three outcomes are recognized:
 - **Approve as is** — the user confirms the Plan is correct. The skill proceeds to Step 7 (Realize prerequisites).
 - **Fill in or amend** — the user resolves a `user-needed` row by supplying the missing value, or amends another row. The skill returns to Step 5 (Compose Plan), recomposes the Plan with the change applied, and re-presents it. This loop continues until the user approves or rejects.
 - **Reject** — the user declines the Plan. The skill terminates without writing or installing anything.
+
+### Rows with `host-setup-required`
+
+A Plan that contains one or more `host-setup-required` rows is approvable. The user reads each such row and decides whether to fix the host now (re-running the skill after the fix to refresh the discovery), or to approve as is and fix the host later. The approval prompt does not change shape when these rows are present; the rows themselves carry the information the user needs. When the user approves a Plan with `host-setup-required` rows still unmet, generation proceeds normally — the generated files will typecheck and Storybook-build, but the component may not behave as the spec assumes in the live host until the precondition is supplied.
 
 ---
 

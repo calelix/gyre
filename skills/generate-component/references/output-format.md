@@ -38,6 +38,8 @@ Identifiers and string literals from the spec are preserved verbatim. If the spe
 
 External symbols are imported from the paths the Plan's items table records (the import map). The Reference primitive uses the export form (default or named) that host discovery recorded on the Plan; the corresponding import statement form follows the stack's standard syntax.
 
+External symbol *names* (not just paths) are also resolved by host discovery. The Plan's `Import: <role> from <pkg>` rows record the specific exported names selected from each package's installed type definitions, taking deprecation status into account. The selection algorithm (candidate generation, type-definition check, deprecation check, submodule selection) lives in [`host-discovery.md`](./host-discovery.md) under *External dependencies — symbol resolution*. Emit uses exactly the names the Plan recorded.
+
 The import map is the single source of truth for paths. Do not hand-edit imports to "fix" them during Step 9's self-repair loop without recomposing the Plan.
 
 ---
