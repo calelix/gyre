@@ -22,8 +22,8 @@ Each row of the Skills table below describes one external stack skill:
 | name | source | skill | purpose |
 |---|---|---|---|
 | `shadcn` | `shadcn/ui` | — | Project-aware shadcn/ui context — CLI usage and composition rules — that component generation relies on. |
-| `react-best-practices` | `vercel-labs/agent-skills` | `react-best-practices` | React idioms and anti-patterns the generated component must respect. |
-| `composition-patterns` | `vercel-labs/agent-skills` | `composition-patterns` | Component composition rules that shape how primitives are arranged. |
+| `vercel-react-best-practices` | `vercel-labs/agent-skills` | `vercel-react-best-practices` | React idioms and anti-patterns the generated component must respect. |
+| `vercel-composition-patterns` | `vercel-labs/agent-skills` | `vercel-composition-patterns` | Component composition rules that shape how primitives are arranged. |
 | `next-best-practices` | `vercel-labs/next-skills` | `next-best-practices` | Next.js App Router conventions (RSC boundaries, file conventions, data patterns) the generated component must conform to. |
 | `next-cache-components` | `vercel-labs/next-skills` | `next-cache-components` | Next.js Cache Components rules for any cached / RSC-cached behavior the spec requires. |
 | `web-design-guidelines` | `vercel-labs/agent-skills` | `web-design-guidelines` | Web interface guidelines (interaction, accessibility, layout) the generated component must meet. |
