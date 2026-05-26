@@ -31,7 +31,7 @@ This is the only mapping rule this skill owns. Each section of the spec becomes 
 | `## How → States` (named, non-default, not inherited) | One story per state. States explicitly described as "inherited from" a Reference primitive without component-specific behavior are not given separate stories. |
 | `## How → Interactions` / `## Data / Content` revealing a context-provider dependency | One story per visually-distinct provider configuration (sourced `inferred` on the Plan), with the provider supplied inline at the story site. |
 
-Identifiers and string literals from the spec are preserved verbatim. If the spec writes a prop description in Korean, that description is preserved as is. If the spec fixes an English prop name, it is used as is.
+Identifiers and string literals from the spec are preserved verbatim.
 
 ---
 
@@ -70,6 +70,16 @@ No comments are added by default. The generated file contains no doc-block comme
 The single exception: when the spec's `## How → Edge cases` or `## Look` section carries a constraint whose intent would be lost on a future reader without annotation, exactly one short comment is added at the relevant site. The comment is a single line, never a paragraph.
 
 This rule is a project-wide convention and is **not** delegated to stack skills — it stands regardless of what stack documentation suggests for doc-block or banner conventions.
+
+---
+
+## Pattern selection deference
+
+When a code-form decision involves a pattern covered by a loaded stack skill (React hydration handling, Next.js RSC boundary placement, accessibility primitives, component composition patterns), the writer defers to the loaded stack skill's prescription over general knowledge of the same domain. When two loaded skills disagree, the more-specific skill wins (e.g., `next-best-practices` over `vercel-react-best-practices` for Next.js-specific concerns).
+
+This rule operationalizes the existing "delegated to the stack skills installed by `setup`" language elsewhere in this file and in [`host-discovery.md`](./host-discovery.md): invocation alone (`generate-component` Step 2.5) does not guarantee consultation at write time; this deference rule is the consultation half.
+
+This rule's effectiveness depends on the spec leaving the mechanism unspecified at the layer where the skill speaks; that spec-side discipline is enforced by `clarify-component`'s `## How` voice rule ([`../../clarify-component/references/output-format.md`](../../clarify-component/references/output-format.md) §`## How` voice rule). A spec that pre-commits at a mechanism layer makes this deference rule a no-op for that mechanism.
 
 ---
 

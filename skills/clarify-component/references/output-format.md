@@ -143,21 +143,59 @@ The compressed line is followed by the single substantive line stating the impli
 
 ### `## How` voice rule
 
-The three sub-sections of `## How` that describe observable behavior — `Interactions`, `Edge cases`, `Accessibility` — follow a requirements-only voice. A bullet is rejected when it contains:
+The three sub-sections of `## How` that describe observable behavior — `Interactions`, `Edge cases`, `Accessibility` — follow a requirements-only voice. The rule is governed by a canonical semantic question and three tests; example sets in any language are anchors, not a complete vocabulary.
 
-1. **Library or API names** in the body prose (`useEffect`, `useState`, `next-themes`, etc.) that the AI authored. Library names quoted verbatim from the user's request are not rejected.
-2. **Procedural steps** ("...then ...", "first ... after which ...").
-3. **Citations of specific implementation idioms** ("mount-guard pattern", "render prop" used as a how-to instruction).
+**Canonical question:** Does this bullet describe an *observable property* of the component (a requirement), or *a means by which the component achieves something* (an implementation)?
 
-The rule does not reject domain-level outcome statements like "the dropdown opens on click" or "focus moves to the first item" — these describe the observable result, not the means of achieving it. Likewise, ARIA attributes like `aria-expanded="true"` are observable outcomes the component must produce, not implementation choices.
+**Test 1 — Outcome test.** Can a black-box observer of the rendered component verify this bullet is true by looking at observable output alone (DOM state, ARIA attributes, visual presence, interaction response)? If yes, the bullet is a requirement and passes. If the bullet describes internal mechanism (state held inside the component, lifecycle moments, internal data flow), it is rejected.
 
-When a bullet trips the rule, the AI returns to dialogue with a single rephrase question, and the user's answer routes to one of two outcomes: rewrite the bullet as the underlying requirement, or — when the user confirms the specific pattern itself is the requirement — record the prose under the optional `## Implementation hints` section above, with the user's stated rationale.
+**Test 2 — Procedural test.** Does the bullet describe a sequence of actions? Reject. Sequence indicators include but are not limited to:
 
-Enforcement happens at the *Self-check* step (Step 10 in `SKILL.md`); the rule's authoring-time and self-check-time application are also described in `dimensions.md` *Note on requirements-only voice for `## How`*.
+- English: "then", "after", "first ... after which", "next".
+
+Sequences imply construction.
+
+**Test 3 — Mechanism citation test.** Could a future stack-skill prescription substitute a different named technique for the same higher-layer user-observable contract without changing what the user perceives? If yes, the bullet has cited a mechanism and must be restated at the higher layer.
+
+Apply the test by attempting the substitution: name an alternative technique that would satisfy the same observable outcome. If you can name one (the spec author can substitute `<span class="sr-only">` text for `aria-label`, `<button>` for `<div role="button">`, `fetch` for `EventSource`), the bullet is mechanism-shaped and rejected. If no substitution preserves the observable outcome (`aria-expanded='true'` IS the observable contract — there is no alternative — and "the dropdown opens on click" IS the user-perceived behavior), the bullet passes.
+
+The criterion applies to AI-authored prose in any language. Apply the counterfactual test to the candidate regardless of the language it was generated in. The anchors below are written in English (the spec's source language), illustrating the categorical *shape* of mechanism citations — not a closed vocabulary, and not a language-restricted vocabulary.
+
+**Reject anchors** (illustrating categorical shapes the criterion rejects):
+
+- JS/React runtime: `useEffect`, `useState`, `useContext`, `useRouter`, `mount-guard pattern`, `render prop`, `compound component`.
+- ARIA attribute names (as opposed to ARIA values): `aria-label`, `aria-describedby`, `aria-labelledby`, `role="..."` selection.
+- CSS utility class names: `sr-only`, `visually-hidden`, `dark:hidden`, `not-dark:`.
+- HTML element selection among interactive controls: `<button>` vs `<a role="button">` vs `<div tabindex="0">`.
+- CSS technique citations: `transform: scale()`, `transition-all`, `prefers-reduced-motion`, `:focus-visible`.
+- Web-platform feature names: `matchMedia`, `IntersectionObserver`, `MutationObserver`, `localStorage`.
+- Network primitive names: `fetch`, `XMLHttpRequest`, `EventSource`, `WebSocket`.
+- Routing primitive names: `<Link>`, `useRouter().push`, `<a href>`, `redirect()`.
+
+**Pass anchors** (illustrating shapes the criterion permits):
+
+- Domain-level outcome statements: "the dropdown opens on click", "focus moves to the first item".
+- ARIA attribute *values* describing observable state: `aria-expanded='true'`, `aria-current='page'`, `aria-pressed='false'`.
+- User's verbatim request quoted back. The rule fires on AI-authored prose only.
+- Observable constraints with thresholds: "contrast ratio ≥ 4.5:1", "control is reachable by keyboard tab order".
+
+When a bullet trips any of the three tests, the AI returns to dialogue with a single rephrase question, and the user's answer routes to one of two outcomes: rewrite the bullet as the underlying requirement, or — when the user confirms the specific pattern itself is the requirement — record the prose under the optional `## Implementation hints` section above, with the user's stated rationale.
+
+**Boundary: layered observability.** When a single user-observable contract admits multiple equally observable sub-statements at descending layers of specificity, state the requirement at the **highest layer where user intent is fully captured**. Lower-layer statements that name a particular technique among legitimate alternatives are mechanism citations under Test 3.
+
+Worked example — mode-toggle accessibility:
+
+- L0 (highest, user-observable): *"Button exposes an accessible name that, when read aloud, conveys the next action available given the current theme."*
+- L1: *"Button has an `aria-label` attribute whose value conveys that action."* ← rejected by Test 3 (`<span class="sr-only">` text or `aria-labelledby` reference could substitute without changing what the user perceives).
+- L2: *"Button has `aria-label='Switch to dark mode'` when in light mode."* ← rejected by Test 3 (same reason).
+
+Spec authors state at L0. If the user explicitly requests a lower layer for parity (e.g., "I want `aria-label` specifically because the shadcn ModeToggle uses it"), route the prose to `## Implementation hints` with the user's rationale, per the existing reject flow.
+
+Enforcement happens at the *Self-check* step (Step 10 in `SKILL.md`); the rule's authoring-time and self-check-time application are also described in `dimensions.md` *Note on requirements-only voice for `## How`*. This is the spec-side half of a two-part contract with `generate-component`'s *Pattern selection deference* ([`../../generate-component/references/output-format.md`](../../generate-component/references/output-format.md) §Pattern selection deference): clarify must not pre-commit at a layer where stack skills speak; generate must consult those skills at write time.
 
 ### Open Questions
 
-There is no `Open Questions` section. Every captured item must be a resolved decision. If the user could not answer a question, the AI must have proposed a default for the user to explicitly accept or reject, or re-cast the question as multiple choice, or offered concrete examples to disambiguate intent. Acceptance of a proposed default is a resolved decision.
+There is no `Open Questions` section. Every captured item must be a resolved decision. Under the AskUserQuestion delivery rule (see `../SKILL.md` `## Dialogue mode` accommodation 3), every question is already presented with AI-proposed candidate options plus an automatic "Other" choice; the user's selection of an option is acceptance of that proposed default, and an "Other" response is the user's explicit answer. If the user types something equivalent to "I don't know" in "Other", the AI must widen the candidate set, offer concrete examples in option descriptions, or propose its most-plausible candidate for explicit accept/reject. Acceptance of a proposed default is a resolved decision.
 
 ## Body — reuse path (early termination)
 
@@ -174,6 +212,12 @@ Use this body when the *Where* decision is `Reuse`. No other dimensions are writ
 - Reference: <component identifier the user named>
 - Rationale: <one line on why reuse is sufficient>
 ````
+
+## Spec language rule
+
+All spec content is written in English, regardless of the dialogue language. The AI translates the user's natural-language answers into English at spec write time. Documentation-style sections (Summary, Purpose, Rationale, descriptions) and code-bound string literals (default prop values, aria-label / aria-describedby text, sr-only content, edge-case literal indicators) are all in English. The user can adjust any string in the generated code if a different exact text is desired.
+
+This rule is enforced at clarify write time and verified at `generate-component` Step 2 (Load spec); see [`../../generate-component/SKILL.md`](../../generate-component/SKILL.md) Step 2 for the safety-net validation.
 
 ## Constraints on the generated file
 

@@ -38,7 +38,7 @@ Both kinds of host mutation are explicit items on the Plan; neither occurs witho
 
 ## Language
 
-The skill body and reference files are written in English. At runtime the AI conducts Plan presentation, approval dialogue, and final reporting in the user's language, inferred from the user's messages. The generated code's identifiers and string literals follow the spec's decisions verbatim — if the spec writes a prop description in Korean, that description is preserved as is; if the spec fixes an English prop name, it is used as is.
+User-facing prompts (Plan presentation, approval dialogue, final reporting) are in the user's language, inferred from the user's messages. Spec content is required to be in English (enforced by `clarify-component`'s Spec language rule; see [`../clarify-component/references/output-format.md`](../clarify-component/references/output-format.md)); generate preserves spec content verbatim into code (identifiers, string literals, the rare comment). Generate terminates at Step 2 (Load spec) if it finds any non-ASCII content in the spec body — see Step 2 for the termination message.
 
 ## Scope
 
@@ -102,6 +102,12 @@ A failed precondition is never reported as success — the same posture `setup` 
 ### 2. Load spec
 
 Read `docs/gyre/specs/components/<kebab-name>.md`. Parse both the YAML front matter and the body sections (Where / What / Look / How / Data / Non-goals). If the file is absent, tell the user that no spec was found at that path and that they should run `clarify-component <kebab-name>` to create one, then terminate.
+
+After parsing, scan every section's content for non-ASCII characters. The scan covers all body text and all front-matter values **except** the `source` field, which preserves the verbatim original natural-language request and is intentionally archival. If any non-ASCII characters are found in the scanned content, terminate with the message:
+
+> "The spec at `docs/gyre/specs/components/<kebab-name>.md` contains non-ASCII content in section `<section name>`. Spec content must be in English (enforced by `clarify-component`'s Spec language rule). Re-run `/gyre:clarify-component <kebab-name>` or edit the spec to use English, then re-invoke `/gyre:generate-component <kebab-name>`."
+
+Do not load stack skills, do not perform host discovery, do not write any file. This validation protects against manual spec edits that reintroduce user-language content and against legacy specs created before the language rule landed.
 
 ### 2.5. Invoke stack skills
 

@@ -27,7 +27,7 @@ The output path is not user-overridable in this iteration. See `references/outpu
 
 ## Language
 
-The skill body and reference files are written in English. At runtime the AI **must** deliver questions to the user in the user's language, inferred from the user's first message. The output Markdown file uses English-language section headings (as templated in `references/output-format.md`); the *content* the user supplies inside those headings may be in the user's language.
+Questions, prompts, multiple-choice presentations, and any follow-up messages delivered to the user are in the user's language, inferred from the user's first message. Everything else — the spec body in its entirety (Summary, Purpose, descriptions, rationale, edge cases, code-bound string literals), and any internal AI processing — is in English without exception. The skill body and reference files are written in English. The output Markdown file's section headings and content are both in English; the AI translates the user's natural-language answers into English at spec write time.
 
 ## Process
 
@@ -85,7 +85,7 @@ Evaluate, with no question asked to the user:
 1. Could a code-generation step produce a coherent implementation from this spec, in one pass?
 2. Are there any captured items that could reasonably be interpreted in two different ways?
 3. Are there any areas the risk signals flagged that have not been explored in sufficient depth?
-4. Does every bullet in `## How → Interactions`, `## How → Edge cases`, and `## How → Accessibility` read as a requirement rather than an implementation pattern? Reject prose that contains library/API names the AI authored (e.g., `useEffect`, `next-themes`), procedural steps ("...then ..."), or named implementation idioms ("mount-guard pattern"). When a bullet trips the rule, return to dialogue with a single rephrase question. If the user confirms the pattern itself is the requirement, route the bullet to `## Implementation hints` with the user's stated rationale; otherwise rewrite the bullet as the underlying requirement.
+4. Does every bullet in `## How → Interactions`, `## How → Edge cases`, and `## How → Accessibility` read as a requirement rather than an implementation pattern? Apply the three tests defined in `references/dimensions.md` (*Note on requirements-only voice for `## How`*) and `references/output-format.md` (*`## How` voice rule*): the canonical Outcome test, the Procedural test, and the Mechanism citation test. The tests are language-agnostic; example sets in those files anchor the AI's judgment but are not exhaustive. When a bullet trips any of the three tests, return to dialogue with a single rephrase question. If the user confirms the pattern itself is the requirement, route the bullet to `## Implementation hints` with the user's stated rationale; otherwise rewrite the bullet as the underlying requirement.
 
 The ambiguity threshold tightens with risk: a high-risk component requires a lower ambiguity tolerance than a low-risk one to pass self-check.
 
@@ -106,16 +106,16 @@ This is the mechanism by which the dimension activation policy and the self-chec
 **Three accommodations** soften the friction without diluting the depth:
 
 1. **Absorbing answers richer than asked.** If the user volunteers information beyond what was asked, absorb it and adjust (or skip) subsequent questions accordingly. The user may answer sequentially or in bulk; the AI must remain sequential in asking.
-2. **Enumerative dimensions may be batched.** *Non-goals* is the clearest case; ask it in one prompt.
-3. **Multiple choice preferred when answers are bounded.** When a question has a finite set of reasonable answers, present them as choices rather than asking open-endedly. Open-ended is reserved for cases where free-form input is necessary.
+2. **Enumerative dimensions may be batched.** *Non-goals* is the clearest case; ask it in one prompt — a single multiSelect AskUserQuestion call under the delivery rule in accommodation 3.
+3. **AskUserQuestion as default delivery.** Every question is delivered via the AskUserQuestion tool. The AI generates 2–4 candidate answers from the accumulated dialogue context (original request text + prior dimension answers) and presents them as options; the tool's automatic "Other" choice carries any free-form custom input. Option labels and descriptions are in the user's language. When the AI cannot generate ≥ 2 distinct candidates for a question, it falls back to a plain text prompt — this should be rare. See `references/dimensions.md` *Delivery mechanism* for the per-dimension shape (option count, multiSelect, candidate source).
 
 ## Self-check accommodations
 
 If a user cannot answer a particular question, use these tools to keep clarification moving:
 
-- **Propose a sensible default** for the user to explicitly accept or reject. Acceptance is a resolved decision, not a deferral.
-- **Re-cast as multiple choice** when the question was open-ended.
-- **Offer concrete examples** to disambiguate intent.
+- **Propose a sensible default** for the user to explicitly accept or reject. Under the AskUserQuestion delivery rule (accommodation 3 above) every option is already a proposed default; if the user picks none of the offered options and types in "Other" something equivalent to "I don't know", treat the most-plausible option as the proposal and ask for accept/reject explicitly. Acceptance is a resolved decision, not a deferral.
+- **Widen the candidate set** if the user reports the offered options don't match their intent. Re-issue the AskUserQuestion call with a different candidate set drawn from a broader interpretation of the context.
+- **Offer concrete examples** in option descriptions to disambiguate intent — the AskUserQuestion option `description` field is the natural place for these.
 
 The skill never produces a spec that contains unanswered questions. The output format has no `Open Questions` section. Vary the *form* of a question when the user is having trouble with it; do not repeat the same question in the same form.
 
