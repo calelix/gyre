@@ -33,7 +33,7 @@ becomes a stale spec default rather than an informed user decision, and
   legitimate interaction variant, clarify enumerates the variants and
   obtains an explicit choice from the user before fixing one in the spec.
 - **Actual:** the user said
-  *"다크모드와 라이트모드를 전환하는 mode-toggle 컴포넌트를 만든다."*
+  *"Build a mode-toggle component that switches between dark mode and light mode."*
   The spec silently locked in the binary-toggle variant:
   `## Where → Reference: Button` (no `DropdownMenu`), and `## Non-goals`
   excluded "system" as an option without prompting. The user was never

@@ -2,7 +2,7 @@
 date: 2026-05-25
 slug: generate-component-stack-skills-uninvoked
 title: generate-component never loads or invokes the stack skills setup installs
-status: open
+status: resolved
 ---
 
 # generate-component never loads or invokes the stack skills setup installs
@@ -86,24 +86,31 @@ the same gap risks decisions that diverge from the stack guidance the
 manifest claims to enforce.
 
 ## Remediation
-Open. The fix requires a design decision before code changes:
+Two designs together close this gap:
 
-- choose which `generate-component` steps need stack-skill knowledge
-  unconditionally (likely Step 4 host discovery, Step 8 file writing,
-  Step 9 verification), and
-- specify the call mechanism per step — which stack skill to invoke via the
-  Skill tool, for what purpose, at what point — so the delegation in the
-  reference files is no longer wording-only.
+- [`docs/superpowers/specs/2026-05-25-stack-skills-invocation-design.md`](../superpowers/specs/2026-05-25-stack-skills-invocation-design.md) defines the Step 2.5 invocation mechanism and extends the manifest with `kind` / `condition` columns. These changes were applied to the skill files.
+- [`docs/superpowers/specs/2026-05-26-code-form-quality-gates-design.md`](../superpowers/specs/2026-05-26-code-form-quality-gates-design.md) Mechanism 3 adds the consultation-deference rule to [`skills/generate-component/references/output-format.md`](../../skills/generate-component/references/output-format.md) (the Pattern selection deference subsection) and the mode-toggle regression scenario to the invocation design's Verification section.
 
-Until that design lands, no code changes are made and the issue remains
-`open`.
+Together, invocation (Step 2.5) plus consultation (deference rule) form the full pipeline that loads stack-skill knowledge into the runtime context and prefers it over AI general knowledge at write time. The status remains `open` until the regression scenario passes on a real run; see Verification below.
 
 ## Verification
-N/A — recorded as `open`. When a remediation lands, verification should
-re-run `/gyre:setup` → `/gyre:clarify-component` → `/gyre:generate-component`
-against a non-trivial spec on a host project and confirm that the affected
-stack skills are actually invoked at the specified steps (visible in the
-run's tool-call trace).
+Closing test: Scenario 4 (Mode-toggle regression) in [`docs/superpowers/specs/2026-05-25-stack-skills-invocation-design.md`](../superpowers/specs/2026-05-25-stack-skills-invocation-design.md) Verification section.
+
+A passing run requires:
+
+- Step 2.5 tool-call trace shows the five `always` Skill invocations in manifest row order.
+- The emitted `mode-toggle.tsx` contains no `useState(mounted)`, no `useEffect(() => setMounted(true), [])`, and no `if (!mounted) return placeholder` branch.
+- The emitted code uses CSS-only Tailwind `dark:` variants for theme-dependent styling.
+
+If the trace shows the invocations but the emitted code still contains the mount-guard branch, this issue remains `open` and a new issue is filed recording the consultation gap separately. If both conditions are met, transition this issue's `status` front-matter from `open` to `resolved` with a brief note in this section linking the passing run.
+
+**Resolved on 2026-05-26.** Verified on a separate host project running `/gyre:setup` → `/gyre:clarify-component` → `/gyre:generate-component` against a `mode-toggle` spec. All three closing conditions held on the run:
+
+- Step 2.5 tool-call trace showed the five `always` skills invoked in manifest row order (`vercel-react-best-practices`, `vercel-composition-patterns`, `next-best-practices`, `web-design-guidelines`, `building-components`).
+- The emitted `mode-toggle.tsx` contained no `useState(mounted)` / `useEffect(() => setMounted(true), [])` / `if (!mounted) return placeholder` branch.
+- Theme-dependent styling resolved via CSS-only Tailwind `dark:` variants.
+
+Host project identifier omitted by request; the regression scenario itself is the durable record.
 
 ## Follow-ups
 - During the design step, consider whether `agent-browser` belongs in the

@@ -38,10 +38,10 @@ more idiomatic patterns.
 - **Actual:** the spec's `## How → Edge cases` explicitly prescribes
   the implementation:
 
-  > "SSR 및 클라이언트 마운트 이전에는 next-themes의 resolvedTheme이
-  > undefined이므로, 동일한 크기를 차지하는 중립 플레이스홀더(투명/빈
-  > 박스)를 렌더하여 레이아웃 시프트를 방지하고, 클라이언트 마운트가
-  > 완료된 뒤 실제 아이콘으로 교체한다."
+  > "Before SSR and client mount, next-themes' resolvedTheme is
+  > undefined, so render a neutral placeholder (transparent/empty box)
+  > of the same size to prevent layout shift, then swap to the real
+  > icon after client mount completes."
 
   That sentence is a specific pattern (the `mounted` + `useEffect`
   guard idiom from older next-themes guides), not a requirement
