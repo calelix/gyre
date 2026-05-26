@@ -45,9 +45,19 @@ counterpart for `clarify-component` and the spec format.
 Every item written to the spec must be one of:
 
 1. The user's explicit answer,
-2. An explicit default proposal the user accepted, or
+2. An explicit default proposal the user accepted,
 3. An AI-derived item phrased as a *requirement* (no implementation
-   prose, no procedural steps, no library APIs in the body).
+   prose, no procedural steps, no library APIs in the body), or
+4. An AI translation of the user's natural-language answer into
+   English, written into the corresponding spec section. This
+   shape does not require user acceptance because (i) the
+   translation preserves the user's intent rather than introducing
+   a new decision, and (ii) the resulting English text is editable
+   in the generated code by the user without re-running clarify.
+   Shape (4) applies only to translation — it does not authorize
+   new requirements, states, props, or behavioral constraints. See
+   [`2026-05-26-code-form-quality-gates-design.md`](2026-05-26-code-form-quality-gates-design.md)
+   Mechanism 1 for the surrounding language enforcement.
 
 Three consequences follow:
 
@@ -425,9 +435,9 @@ After implementation, three scenarios cover the design.
 
 ### Scenario A — mode-toggle re-run, Interaction model dimension fires
 
-Re-run `/gyre:clarify-component "다크모드와 라이트모드를 전환하는
-mode-toggle 컴포넌트를 만든다."` (the same request that produced the
-original spec).
+Re-run `/gyre:clarify-component "Build a mode-toggle component that
+switches between dark mode and light mode."` (the same request that
+produced the original spec).
 
 Expected dialogue:
 
@@ -497,8 +507,8 @@ This scenario closes the *escape-hatch* portion of
 
 ### Scenario C — single-variant component (negative case)
 
-Run `/gyre:clarify-component "기본 제출 버튼"` (primary submit
-button) — a pattern with one dominant shape in current practice.
+Run `/gyre:clarify-component "primary submit button"` — a pattern
+with one dominant shape in current practice.
 
 Expected:
 

@@ -379,9 +379,7 @@ Following the `clarify-component` and `setup` convention:
 - At runtime the AI conducts Plan presentation, approval dialogue, and final
   reporting in the user's language, inferred from the user's messages.
 - The generated code's identifiers and string literals follow the spec's
-  decisions verbatim. If the spec writes a prop description in Korean, that
-  description is preserved as is; if the spec fixes an English prop name,
-  it is used as is.
+  decisions verbatim. The spec's contents are preserved as is.
 
 ## Constraints
 

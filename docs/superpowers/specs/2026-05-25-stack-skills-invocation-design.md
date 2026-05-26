@@ -174,8 +174,34 @@ Three scenarios cover the classification:
 3. **Component whose spec's `## Data` section mentions caching/RSC-cache**:
    expect 5 `always` + 1 `conditional` (`next-cache-components`) invoked
    — total 6 Skill invocations.
+4. **Mode-toggle regression** — re-run the full pipeline on the
+   originally failing case:
+   `/gyre:setup` → `/gyre:clarify-component "Build a mode-toggle component that switches between dark mode and light mode."` → `/gyre:generate-component mode-toggle`.
 
-Successful execution of all three scenarios closes
+   Expected Step 2.5 tool-call trace (in manifest row order): five
+   `always` Skill invocations — `vercel-react-best-practices`,
+   `vercel-composition-patterns`, `next-best-practices`,
+   `web-design-guidelines`, `building-components`.
+   `next-cache-components` skipped (no caching in spec). `shadcn`
+   skipped (external; auto-activates separately if `Where` decision
+   is `Compose`). `agent-browser` skipped (deferred).
+
+   Expected emitted component file: NO `useState(mounted)`,
+   NO `useEffect(() => setMounted(true), [])`, NO
+   `if (!mounted) return placeholder` branch. The component uses
+   CSS-only Tailwind `dark:` variants. The host root layout's
+   `<html suppressHydrationWarning>` is out of generate's scope;
+   the relevant stack skill may surface it as a
+   `host-setup-required` Plan row if absent.
+
+   If the trace shows Step 2.5 invocations but the emitted code
+   still contains the mount-guard branch → file a new issue under
+   `docs/issues/` recording the **consultation gap** (loaded but
+   not consulted), and do not resolve the existing invocation issue.
+   See [`2026-05-26-code-form-quality-gates-design.md`](2026-05-26-code-form-quality-gates-design.md)
+   Mechanism 3 for the full design context.
+
+Successful execution of all four scenarios closes
 [`docs/issues/2026-05-25-generate-component-stack-skills-uninvoked.md`](../../issues/2026-05-25-generate-component-stack-skills-uninvoked.md).
 
 ## Follow-ups
