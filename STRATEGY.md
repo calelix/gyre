@@ -1,52 +1,151 @@
 # Strategy
 
-Upstream anchor for the Gyre project. Downstream stages — skills like `clarify-component`, future skills, and the issue records under `docs/issues/` — read this document to understand the problem being solved, who we're solving it for, and what counts as progress. Edit as the project's understanding sharpens.
+## Promise
 
-## Target problem
+Gyre makes one promise to a single director — one person carrying the
+intent of PM, designer, and engineer simultaneously:
 
-Frontend development typically routes work through three roles — product manager, designer, and developer. The handoff between them is slow and prone to conflict driven by differing perspectives. When the conflict is healthy it lifts quality; when it isn't, it just burns energy.
+> **The director's short natural-language intent is converted into an
+> enterprise-grade UI component or page, with follow-up review burden
+> minimized.**
 
-When a single person carries all three roles — a *director* running solo — the role-to-role dialogue collapses, and with it the quality lift that used to come from it. Gyre's bet: the quality lift can be reproduced through structured human-to-AI dialogue, with the AI taking on all three roles deliberately.
+Previously, collaboration across multiple roles produced a *quality
+lift*. That lift must now be reproduced in the dialogue between
+director and AI — and the dialogue must be *small*. The limit target
+is zero turns.
 
-## Persona
+## Core Trade-off
 
-The *director*: a single human who carries product, design, and engineering intent. They drive the work end-to-end, formulate intent in natural language, and review what the AI produces. They do not want to context-switch between role-shaped tools.
+The deeper the dialogue and verification, the higher the quality — but
+the promise breaks. Deep dialogue and verification raise the director's
+*cognitive load*. Cognitive load includes not only decision,
+interpretation, and re-review, but also the unending self-questioning
+of *"have I looked enough?"* A short natural-language input does not
+mean a small cognitive load.
 
-## Approach
+Gyre shifts this burden from the director to the AI. Deep dialogue and
+verification happen inside the AI; the director only conveys short
+natural-language intent. Quality is preserved as the result of deep
+dialogue and verification, and the director's cognitive load converges
+to zero.
 
-Given a natural-language request for a UI component or page, Gyre refines under-specified intent through structured dialogue (the AI playing PM, designer, and developer in sequence as the request requires), and produces one of:
+## Stance
 
-- A custom UI component built on top of Headless UI primitives (Base UI, Radix UI) that conforms to the project's design guide, or
-- A design guide itself (`DESIGN.md`).
+There are three burdens — *intent*, *implementation*, and
+*visual·accessibility·edge-state verification*.
 
-The dialogue is not free-form chat. It is structured by skills that enforce specific dimensions of clarification — for example, `clarify-component` runs Where / What / Look / How / Data / Non-goals in sequence and produces a formal Markdown artifact. The artifact is the contract that downstream code generation consumes.
+When these three converge on one person, conflicts repeat without
+resolution and cognitive load grows.
 
-## Definition of done
+Gyre redistributes the responsibility for these three.
 
-Stable execution of the behavior above. *Stable* means: a director can give a natural-language UI request and receive an artifact that needs no clarification round-trips; downstream code generation produces working code from that artifact in one pass without semantic surprises.
+- **Intent** is expressed by the director in short natural language.
+- **Implementation** is inferred autonomously by the AI from stack
+  skills and the host codebase.
+- **Visual·accessibility·edge-state verification** is performed by the
+  AI immediately after the artifact is produced.
 
-Beyond done: systematic component-library management and ongoing learning — Gyre's behavior should improve cycle-over-cycle as `docs/issues/` accumulates concrete lessons.
+## Decision Principles
 
-## Tracks
+To keep the responsibility shift intact, the following five principles
+apply.
 
-Active workstreams:
+### 1. Separation of Intent and Implementation
 
-- **Skills.** The natural-language → artifact pipeline. `skills/clarify-component` is the first complete example. Future skills will cover pages and the design-guide path.
-- **Playgrounds.** Concrete tech-stack instances where artifacts are produced and validated against real code. `experiments/shadcn` is the current playground — Next.js 16 + React 19 + shadcn/ui + Tailwind 4 + next-themes + the internal `@workspace/ui` package (carrying primitives such as Button).
-- **Artifacts.** The formal docs under `docs/gyre/specs/`. Components today; pages and `DESIGN.md` planned. These are the contracts between skills and downstream code generation.
-- **Learning loop.** `docs/issues/` records what failed and how it was fixed. Each entry is meant to make the next unit of work easier.
+Implementation decisions are not asked of the director. The director
+expresses *intent*; the AI handles *implementation*. Traces of
+implementation appearing in the specification are treated as a Phase 1
+defect.
 
-## Key signals
+### 2. Question Minimization
 
-How to tell whether the project is on track. Proposed; refine as evidence accumulates.
+Every question asked of the director is an immediate increase in
+cognitive load. Questions are limited to **UI branches** — cases where
+the same intent admits fundamentally different interaction models.
+Implementation details and UI expression are never asked under any
+circumstances.
 
-- **Clarification round-trips per artifact.** If a director needs more than one correction round to land a spec, the skill is under-asking.
-- **Spec → code surprise rate.** How often downstream code generation has to re-ask the director something the spec should already have covered.
-- **`Compose` vs. `New` ratio in clarify-component artifacts.** A healthy ratio suggests the skill is surfacing primitive reuse, not silently rebuilding what the playground already provides.
-- **Issue accumulation rate.** Not a problem signal in itself — but a plateau on familiar failure modes (e.g., the same skill repeatedly missing the same dimension) *is* a problem signal.
+UI branch questions are permitted only when both of the following
+conditions hold simultaneously:
 
-## Non-goals (current phase)
+(a) The branch is not inferable from the intent, the catalog, or the
+    design guide.
+(b) The result of proceeding with a reasonable default would be
+    difficult for the director to recover from with a small edit.
 
-- Multi-user collaboration features. The director is one person.
-- Coverage of non-frontend codebases. UI components and design guides are the surface for now.
-- Auto-merging or auto-deployment. Artifacts are produced for review, not for autonomous push.
+Edge states of data-dependent components are not asked about. *Which
+states are possible* is inferred from the data source; *the expression
+of each state* is inferred from the catalog and design guide.
+
+### 3. Codebase and Stack Skill First
+
+Implementation decisions are inferred from two sources — the patterns
+of the host codebase and the best practices of stack skills. When the
+two conflict, **the host codebase pattern takes precedence.** Patterns
+already adopted by the catalog reflect this project's context.
+Replacing them with general prescriptions breaks catalog consistency
+and forces the director to compare *why is only this one different* —
+a violation of the responsibility shift.
+
+The exception is when the host codebase pattern is explicitly marked
+*deprecated* or *incorrect*; in that case, the stack skill's
+recommendation applies.
+
+### 4. Reuse and Extension First
+
+The AI is biased toward creating new components. When the catalog has
+a similar component, *reuse*; when only minor differences exist,
+*extend*; only when neither is possible, *create new* — in that
+order. Extension is limited to *addition*; existing interfaces are
+not changed — this prevents regression in existing call sites.
+
+However, **primitive components are not modified or extended.**
+Primitives are the foundation on which the entire catalog depends;
+when a variant is needed, it is solved through *composition*.
+
+### 5. Self-Verification Duty
+
+Visual, accessibility, and edge-state verification is performed by the
+AI on its own, immediately after the artifact is produced. The moment
+the verification mechanism demands the director's *interpretation* or
+*decision*, the responsibility shift is broken. Verification inputs
+are derived automatically from the component type and from the
+catalog and design guide; they do not require input from the director
+into the specification.
+
+## Signals of Progress
+
+Whether Gyre is heading in the right direction is measured by the
+following signals.
+
+### 1. Frequency of Director's Follow-up Edits
+
+How much the director had to *touch up* after receiving the artifact.
+The top-level signal of whether the responsibility shift is working.
+Must converge to zero.
+
+### 2. Implementation Traces in the Specification
+
+The rate at which implementation details appear in specifications.
+The signal of whether [Principle 1](#1-separation-of-intent-and-implementation) is working. Must converge to zero.
+
+### 3. Questions per Artifact
+
+The average number of questions asked of the director per artifact.
+The signal of whether [Principle 2](#2-question-minimization) is working. Must converge to zero.
+
+### 4. Self-Verification Coverage
+
+The fraction of all defects caught by self-verification. The signal of
+whether [Principle 5](#5-self-verification-duty) is being realized. Must converge to one.
+
+## Non-goals
+
+- **Multi-director collaboration.** There is only one director. Intent
+  conflicts among multiple directors and consensus-building are not
+  addressed.
+- **Beyond UI.** Non-frontend code, backend API design, and
+  infrastructure decisions are not addressed.
+- **Autonomous merge or deploy.** Artifacts are produced for the
+  director's review. They are not automatically pushed without the
+  director's approval.
