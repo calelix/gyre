@@ -276,8 +276,5 @@ mechanism, the more-specific skill wins per the existing rule
     `<span class="sr-only">` as equally valid; no preference.
 - Stack skills manifest:
   [`skills/setup/references/stack-skills.md`](../../skills/setup/references/stack-skills.md).
-- Design that closed the sibling issue (and whose scope this
-  issue extends):
-  [`docs/superpowers/specs/2026-05-25-clarify-component-silent-defaults-design.md`](../superpowers/specs/2026-05-25-clarify-component-silent-defaults-design.md).
 - Reference shadcn canonical for the same component:
   https://ui.shadcn.com/docs/dark-mode/next.

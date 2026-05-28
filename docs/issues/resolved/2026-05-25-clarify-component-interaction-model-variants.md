@@ -117,12 +117,10 @@ mechanism is general, not mode-toggle-specific.
   compression criterion in `dimensions.md`.
 
 ## Related
-- Design that closed this issue:
-  [`docs/superpowers/specs/2026-05-25-clarify-component-silent-defaults-design.md`](../superpowers/specs/2026-05-25-clarify-component-silent-defaults-design.md).
 - Spec produced this run:
   `<host>/docs/gyre/specs/components/mode-toggle.md`.
 - Comparison reference: https://ui.shadcn.com/docs/dark-mode/next.
-- Adjacent clarify issue:
-  [`2026-05-19-clarify-component-where-misses-primitives.md`](2026-05-19-clarify-component-where-misses-primitives.md).
+- Adjacent clarify issue (archived):
+  [`archived/2026-05-19-clarify-component-where-misses-primitives.md`](archived/2026-05-19-clarify-component-where-misses-primitives.md).
 - Sibling issue (implementation patterns leaking into spec):
   [`2026-05-25-clarify-component-implementation-leaks-into-spec.md`](2026-05-25-clarify-component-implementation-leaks-into-spec.md).

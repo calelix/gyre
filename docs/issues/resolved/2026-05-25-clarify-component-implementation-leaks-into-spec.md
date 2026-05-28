@@ -125,8 +125,6 @@ against the same `mode-toggle` source text should:
   calibration draws from real cases.
 
 ## Related
-- Design that closed this issue:
-  [`docs/superpowers/specs/2026-05-25-clarify-component-silent-defaults-design.md`](../superpowers/specs/2026-05-25-clarify-component-silent-defaults-design.md).
 - Spec produced this run:
   `<host>/docs/gyre/specs/components/mode-toggle.md`
   (sections `## How → Edge cases`, `## Data / Content → Edge data`).

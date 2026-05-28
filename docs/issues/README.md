@@ -59,6 +59,12 @@ Evidence that the change actually closed the problem — re-runs, tests, artifac
 - `partial` — Partially closed; follow-up work remains (see Follow-ups).
 - `open` — Not yet closed.
 
+## Directory layout
+
+- **Top level** — only unresolved issues (`status: open` or `status: partial`).
+- **`resolved/`** — issues whose remediation has been applied and verified (`status: resolved`). Move the file here as soon as the status flips to `resolved`.
+- **`archived/`** — issues that became obsolete because the architecture they describe no longer exists. Kept for historical reference and to surface the kinds of structural failures that motivated subsequent rewrites.
+
 ## Index
 
 While the count is small, no separate index is kept. Filename sort and grepping by `status:` are enough. When the count grows, an index section will be added to this README.

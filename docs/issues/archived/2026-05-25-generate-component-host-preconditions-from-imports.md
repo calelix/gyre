@@ -54,7 +54,7 @@ at runtime — and the user gets no warning.
 
 ## Root cause
 The current slot policy in
-[`references/host-discovery.md`](../../skills/generate-component/references/host-discovery.md)
+[`references/host-discovery.md`](../../../skills/generate-component/references/host-discovery.md)
 covers slots whose *value* is needed to write the file (output
 directory, primitive location, etc.) and dependency checks for
 packages directly listed in `package.json`. It has no slot for
@@ -82,7 +82,7 @@ Resolved by the External Package Knowledge design (see Related). The
 applied remediation:
 
 - A **Consumer-implied preconditions slot** is added to discovery in
-  [`skills/generate-component/references/host-discovery.md`](../../skills/generate-component/references/host-discovery.md).
+  [`skills/generate-component/references/host-discovery.md`](../../../skills/generate-component/references/host-discovery.md).
   For each external symbol the component will import, the AI derives
   host-side preconditions from the loaded stack skill bodies plus
   general knowledge, specifies a verification signal per precondition,
@@ -99,7 +99,7 @@ applied remediation:
   explicit confidence note, biasing toward false positives.
 - The spec format gains an optional `## Host preconditions` section
   in
-  [`skills/clarify-component/references/output-format.md`](../../skills/clarify-component/references/output-format.md)
+  [`skills/clarify-component/references/output-format.md`](../../../skills/clarify-component/references/output-format.md)
   as an escape hatch for preconditions a spec author knows about but
   the derivation channel might miss. `clarify-component` does not
   ask for this section in this iteration. The default path remains
@@ -107,7 +107,7 @@ applied remediation:
   by the same slot.
 
 The label inventory in
-[`skills/generate-component/references/plan-format.md`](../../skills/generate-component/references/plan-format.md)
+[`skills/generate-component/references/plan-format.md`](../../../skills/generate-component/references/plan-format.md)
 grows by one entry, `host-setup-required`, distinguished from
 `attention` by being a runtime (not cosmetic) signal.
 
@@ -136,14 +136,12 @@ new `host-setup-required` label; see the Remediation section.)
   cases.
 
 ## Related
-- Design that closed this issue:
-  [`docs/superpowers/specs/2026-05-25-external-package-knowledge-design.md`](../superpowers/specs/2026-05-25-external-package-knowledge-design.md).
 - Discovery slot policy (extended):
-  [`skills/generate-component/references/host-discovery.md`](../../skills/generate-component/references/host-discovery.md).
+  [`skills/generate-component/references/host-discovery.md`](../../../skills/generate-component/references/host-discovery.md).
 - Plan label inventory (extended with `host-setup-required`):
-  [`skills/generate-component/references/plan-format.md`](../../skills/generate-component/references/plan-format.md).
+  [`skills/generate-component/references/plan-format.md`](../../../skills/generate-component/references/plan-format.md).
 - Spec format optional section:
-  [`skills/clarify-component/references/output-format.md`](../../skills/clarify-component/references/output-format.md).
+  [`skills/clarify-component/references/output-format.md`](../../../skills/clarify-component/references/output-format.md).
 - Comparison reference: https://ui.shadcn.com/docs/dark-mode/next
   ("Add the `ThemeProvider` to your root layout and add the
   `suppressHydrationWarning` prop to the `html` tag.").

@@ -49,9 +49,6 @@ into `SKILL.md` rather than confirmed first.
   policy* section names `.claude/skills/` as the current CLI's location.
 - [`skills/setup/references/stack-skills.md`](../../skills/setup/references/stack-skills.md)
   — the `name` field description now documents the dual-location detection key.
-- [`docs/superpowers/specs/2026-05-22-setup-skill-design.md`](../superpowers/specs/2026-05-22-setup-skill-design.md)
-  — the open design point is resolved and the `.agents/skills/`-only path
-  references are corrected to the dual-location signal.
 - No fixture migration: the `experiments/shadcn` fixture is kept at
   `.agents/skills/shadcn/` deliberately, so the idempotency test continues to
   exercise the `.agents/` detection branch.
@@ -74,5 +71,4 @@ None. The symlink hypothesis (`.agents/` ↔ `.claude/` linked) was raised and
 ruled out by inspection, so no further investigation is outstanding.
 
 ## Related
-- Spec: [`docs/superpowers/specs/2026-05-22-setup-skill-design.md`](../superpowers/specs/2026-05-22-setup-skill-design.md)
 - Skill: [`skills/setup/`](../../skills/setup/)

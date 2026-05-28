@@ -32,19 +32,18 @@ Fixing only (2) and (3) without (1) would leave no field to record the dependenc
 ## Remediation
 Skill enhanced to close the three causes (Option A — add `Compose` to Decision).
 
-- [skills/clarify-component/references/dimensions.md](../../skills/clarify-component/references/dimensions.md)
+- [skills/clarify-component/references/dimensions.md](../../../skills/clarify-component/references/dimensions.md)
   - Added a *composition-aware framing* note at the top: when Where is Extend or Compose, downstream dimensions (Look/How/Data) must distinguish "what the Reference already provides" from "what this component *adds*".
   - Rewrote the Where section: a pre-step to extract category words from the request text; questions split into **Q1a same-role candidate + Q1b base primitive + Q2 disposition**; an explicit note that a negative answer to Q1a does not close Q1b.
   - Added **`Compose`** to Outcomes: Q1a = none + Q1b = exists → Compose, with the primitive identifier recorded as `Reference`.
   - Added a **Decision concepts table** at the top of the Where section (Reuse / Extend / Compose / New). The two boundaries that matter most — *Compose vs. New* and *Compose vs. Extend* — are spelled out, so the same mistake ("building on top of Button but recording as New") is blocked at the conceptual level.
-- [skills/clarify-component/references/output-format.md](../../skills/clarify-component/references/output-format.md)
+- [skills/clarify-component/references/output-format.md](../../../skills/clarify-component/references/output-format.md)
   - Body heading: "new, extended, or composed component".
   - `Decision: New | Extend | Compose`.
   - `Reference: (Extend or Compose only)` and now allows multiple identifiers.
-- [skills/clarify-component/SKILL.md](../../skills/clarify-component/SKILL.md)
+- [skills/clarify-component/SKILL.md](../../../skills/clarify-component/SKILL.md)
   - Step 3 branch list now includes Compose.
-- [docs/gyre/specs/components/mode-toggle.md](../gyre/specs/components/mode-toggle.md)
-  - Artifact updated to the new schema (Decision: Compose, Reference: Button). Acts as the first consistent example of Compose.
+- The `mode-toggle.md` artifact (formerly at `docs/gyre/specs/components/`) was updated to the new schema (Decision: Compose, Reference: Button), acting as the first consistent example of Compose.
 
 ## Verification
 - Checked text-level consistency across the 3 modified skill files and 1 artifact. Decision/Reference/Outcomes/Step 3 all handle Compose consistently.
@@ -56,7 +55,6 @@ Skill enhanced to close the three causes (Option A — add `Compose` to Decision
 - Review whether `references/risk-signals.md` should reflect the Compose decision — assembling on a stable primitive may justify lowering State character by one level.
 
 ## Related
-- [skills/clarify-component/SKILL.md](../../skills/clarify-component/SKILL.md)
-- [skills/clarify-component/references/dimensions.md](../../skills/clarify-component/references/dimensions.md)
-- [skills/clarify-component/references/output-format.md](../../skills/clarify-component/references/output-format.md)
-- [docs/gyre/specs/components/mode-toggle.md](../gyre/specs/components/mode-toggle.md)
+- [skills/clarify-component/SKILL.md](../../../skills/clarify-component/SKILL.md)
+- [skills/clarify-component/references/dimensions.md](../../../skills/clarify-component/references/dimensions.md)
+- [skills/clarify-component/references/output-format.md](../../../skills/clarify-component/references/output-format.md)

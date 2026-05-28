@@ -56,9 +56,6 @@ prefix and the manifest did not reflect the per-skill reality.
   rows change. `generate-component`'s precondition (Step 1.5) reads `name`
   from the manifest dynamically, so its detection keys move with the change
   without a separate edit.
-- [`docs/superpowers/specs/2026-05-24-stack-skills-precondition-and-manifest-expansion-design.md`](../superpowers/specs/2026-05-24-stack-skills-precondition-and-manifest-expansion-design.md)
-  — the design spec carries the same Skills table; its two affected rows are
-  updated to match, so the historical spec does not mislead future readers.
 
 ## Verification
 The corrected manifest values match the upstream names the CLI listed in its
@@ -79,4 +76,3 @@ class of drift recurs.
 - Manifest: [`skills/setup/references/stack-skills.md`](../../skills/setup/references/stack-skills.md)
 - Setup skill: [`skills/setup/SKILL.md`](../../skills/setup/SKILL.md) (Step 5 — install command construction)
 - Generate skill: [`skills/generate-component/SKILL.md`](../../skills/generate-component/SKILL.md) (Step 1.5 — precondition)
-- Design spec: [`docs/superpowers/specs/2026-05-24-stack-skills-precondition-and-manifest-expansion-design.md`](../superpowers/specs/2026-05-24-stack-skills-precondition-and-manifest-expansion-design.md)

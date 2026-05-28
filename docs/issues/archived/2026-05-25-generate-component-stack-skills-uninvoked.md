@@ -23,7 +23,7 @@ The AI extracted conventions by reading host files directly instead.
   `/gyre:setup`, then `/gyre:clarify-component`, then `/gyre:generate-component`
   against a single component spec.
 - Tech stack: the eight skills in the current manifest at
-  [`skills/setup/references/stack-skills.md`](../../skills/setup/references/stack-skills.md)
+  [`skills/setup/references/stack-skills.md`](../../../skills/setup/references/stack-skills.md)
   — `shadcn`, `vercel-react-best-practices`, `vercel-composition-patterns`,
   `next-best-practices`, `next-cache-components`, `web-design-guidelines`,
   `building-components`, `agent-browser`.
@@ -53,22 +53,22 @@ by `setup`," but they do not specify a *call mechanism* by which that
 delegation actually fires.
 
 Concretely:
-- [`SKILL.md` Step 1.5](../../skills/generate-component/SKILL.md) only
+- [`SKILL.md` Step 1.5](../../../skills/generate-component/SKILL.md) only
   **verifies installation** (directory + lock entry). It does not load any
   stack skill's body.
-- [`SKILL.md` Step 4](../../skills/generate-component/SKILL.md) says
+- [`SKILL.md` Step 4](../../../skills/generate-component/SKILL.md) says
   "stack conventions … are delegated to the stack skills installed by
   `setup`" but does not direct the runtime to invoke any of them — discovery
   is left to direct host-file reads.
-- [`SKILL.md` Step 7](../../skills/generate-component/SKILL.md) is the only
+- [`SKILL.md` Step 7](../../../skills/generate-component/SKILL.md) is the only
   step that names "invoke … through Claude Code's Skill tool," and the
   invocation it specifies is **conditional and single-target**: it fires only
   for `shadcn-install` (`npm-install` runs through Bash, not the Skill tool).
   When the Plan contains no such items — as in the reported run — no Skill
   invocation occurs.
-- [`references/host-discovery.md`](../../skills/generate-component/references/host-discovery.md),
-  [`references/output-format.md`](../../skills/generate-component/references/output-format.md),
-  and [`references/verification.md`](../../skills/generate-component/references/verification.md)
+- [`references/host-discovery.md`](../../../skills/generate-component/references/host-discovery.md),
+  [`references/output-format.md`](../../../skills/generate-component/references/output-format.md),
+  and [`references/verification.md`](../../../skills/generate-component/references/verification.md)
   each repeat the delegation language ("the runtime AI consults those stack
   skills") without specifying when, by what trigger, or for which decisions
   that consultation should occur.
@@ -86,17 +86,15 @@ the same gap risks decisions that diverge from the stack guidance the
 manifest claims to enforce.
 
 ## Remediation
-Two designs together close this gap:
+Two changes together close this gap:
 
-- [`docs/superpowers/specs/2026-05-25-stack-skills-invocation-design.md`](../superpowers/specs/2026-05-25-stack-skills-invocation-design.md) defines the Step 2.5 invocation mechanism and extends the manifest with `kind` / `condition` columns. These changes were applied to the skill files.
-- [`docs/superpowers/specs/2026-05-26-code-form-quality-gates-design.md`](../superpowers/specs/2026-05-26-code-form-quality-gates-design.md) Mechanism 3 adds the consultation-deference rule to [`skills/generate-component/references/output-format.md`](../../skills/generate-component/references/output-format.md) (the Pattern selection deference subsection) and the mode-toggle regression scenario to the invocation design's Verification section.
+- A Step 2.5 invocation mechanism was added and the manifest extended with `kind` / `condition` columns. These changes were applied to the skill files.
+- The consultation-deference rule was added to [`skills/generate-component/references/output-format.md`](../../../skills/generate-component/references/output-format.md) (its Pattern selection deference subsection), along with the mode-toggle regression scenario captured in the Verification section below.
 
 Together, invocation (Step 2.5) plus consultation (deference rule) form the full pipeline that loads stack-skill knowledge into the runtime context and prefers it over AI general knowledge at write time. The status remains `open` until the regression scenario passes on a real run; see Verification below.
 
 ## Verification
-Closing test: Scenario 4 (Mode-toggle regression) in [`docs/superpowers/specs/2026-05-25-stack-skills-invocation-design.md`](../superpowers/specs/2026-05-25-stack-skills-invocation-design.md) Verification section.
-
-A passing run requires:
+Closing test — the mode-toggle regression scenario. A passing run requires:
 
 - Step 2.5 tool-call trace shows the five `always` Skill invocations in manifest row order.
 - The emitted `mode-toggle.tsx` contains no `useState(mounted)`, no `useEffect(() => setMounted(true), [])`, and no `if (!mounted) return placeholder` branch.
@@ -119,10 +117,8 @@ Host project identifier omitted by request; the regression scenario itself is th
   precondition cost of requiring it installed is paid for no current benefit.
 
 ## Related
-- Generate skill: [`skills/generate-component/SKILL.md`](../../skills/generate-component/SKILL.md)
+- Generate skill: [`skills/generate-component/SKILL.md`](../../../skills/generate-component/SKILL.md)
   (Steps 1.5, 4, 7) and references in
-  [`skills/generate-component/references/`](../../skills/generate-component/references/).
-- Manifest: [`skills/setup/references/stack-skills.md`](../../skills/setup/references/stack-skills.md).
-- Prior manifest issue: [`2026-05-25-stack-skills-manifest-name-mismatch.md`](2026-05-25-stack-skills-manifest-name-mismatch.md).
-- Design spec: [`docs/superpowers/specs/2026-05-24-stack-skills-precondition-and-manifest-expansion-design.md`](../superpowers/specs/2026-05-24-stack-skills-precondition-and-manifest-expansion-design.md)
-  (introduced the precondition; the call-mechanism gap was not addressed there).
+  [`skills/generate-component/references/`](../../../skills/generate-component/references/).
+- Manifest: [`skills/setup/references/stack-skills.md`](../../../skills/setup/references/stack-skills.md).
+- Prior manifest issue: [`../2026-05-25-stack-skills-manifest-name-mismatch.md`](../2026-05-25-stack-skills-manifest-name-mismatch.md).

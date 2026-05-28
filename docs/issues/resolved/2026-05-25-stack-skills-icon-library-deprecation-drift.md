@@ -69,7 +69,7 @@ installed type definitions and respecting `@deprecated` JSDoc tags.
 No new manifest entry, no package adapter skill.
 
 The same design step covers
-[`2026-05-25-generate-component-host-preconditions-from-imports.md`](2026-05-25-generate-component-host-preconditions-from-imports.md),
+[`archived/2026-05-25-generate-component-host-preconditions-from-imports.md`](archived/2026-05-25-generate-component-host-preconditions-from-imports.md),
 which the two issues' Related sections cross-link.
 
 ## Verification
@@ -93,8 +93,6 @@ The emitted component file imports the suffixed names:
   as the default mechanism.
 
 ## Related
-- Design that closed this issue:
-  [`docs/superpowers/specs/2026-05-25-external-package-knowledge-design.md`](../superpowers/specs/2026-05-25-external-package-knowledge-design.md).
 - Manifest (intentionally unchanged):
   [`skills/setup/references/stack-skills.md`](../../skills/setup/references/stack-skills.md).
 - Discovery and import policy:
@@ -103,5 +101,5 @@ The emitted component file imports the suffixed names:
   ("Imports" section).
 - Phosphor: https://github.com/phosphor-icons/react (releases —
   `*Icon` suffix rename, `/ssr` submodule).
-- Sibling issue (same structural pattern, different package):
-  [`2026-05-25-generate-component-host-preconditions-from-imports.md`](2026-05-25-generate-component-host-preconditions-from-imports.md).
+- Sibling issue (same structural pattern, different package; archived):
+  [`archived/2026-05-25-generate-component-host-preconditions-from-imports.md`](archived/2026-05-25-generate-component-host-preconditions-from-imports.md).
